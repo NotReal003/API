@@ -125,6 +125,8 @@ node index.js
 - **QR Code Generation**: Users can scan QR codes to make payments easily.
 - **Transaction Notifications**: Users can receive confirmation messages after successful transactions.
 
+**[Click here to support this project](https://github.com/NotReal003/API/blob/main/README.md#support-this-project)**.
+
 ### Backend API EndPoints (Some are OutDated by now)
 
 #### User Authentication
