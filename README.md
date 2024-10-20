@@ -1,13 +1,13 @@
 # Request Management System
 
 # FrontEnd WebApp
-FrotnEnd (Website) source code can be found [HERE](https://github.com/NotReal003/Requests).
+FrotnEnd (Website) source code can be found **[HERE](https://github.com/NotReal003/Requests)**.
 ## Overview
 This project is a fully functional request management system, designed for users to submit various types of requests such as Discord reports, support requests, and guild applications. Administrators can manage these requests with advanced control options. Additionally, the system incorporates a cryptocurrency payment feature, allowing users to support the project using different crypto wallets.
 
 The system utilizes React for the frontend and Node.js with MongoDB for the backend. Features include JWT-based authentication, email notifications, request status updates, and an admin dashboard for managing user requests.
 
-## Support Me
+## Support This Project
 
 I've spent a lot of time on this, to keep me working and for motivation, you can support me by paying with Crypto Currency 💲 
 
