@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Update Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.50);
+        }
+        .header {
+            background-color: #1a73e8;
+            padding: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .body {
+            padding: 20px;
+        }
+        .body h2 {
+            color: #1a73e8;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .body h4 {
+            color: #1a73e8;
+            margin-bottom: 4px;
+        }
+        .body p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .body a {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #1a73e8;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .footer {
+            background-color: #f4f4f4;
+            padding: 10px;
+            text-align: center;
+            color: #777777;
+            font-size: 12px;
+        }
+        .footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Request Updated</h1>
+        </div>
+        <div class="body">
+            <h2>Hello, {{username}}!</h2>
+            <p>Your {{requestName}} request has been {{status}}.</p>
+            <h4>Review Message</h4>
+            <p>{{reviewMessage}}</p>
+            <a href="https://request.notreal003.xyz/requestdetail?id={{requestId}}">View Request</a>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 NotReal003. All rights reserved.</p>
+            <p>This is an automated message. Please do not reply to this email.</p>
+        </div>
+        <div class="footer">
+        <p>Your Request ID: {{requestIda}}</p>
+        </div>
+    </div>
+</body>
+</html>
