@@ -1,7 +1,7 @@
 # Request Management System
 
 # PLEASE NOTE
-FrotnEnd source code which can be found [HERE](https://github.com/NotReal003/Requests).
+FrotnEnd (Website) source code can be found [HERE](https://github.com/NotReal003/Requests).
 ## Overview
 This project is a fully functional request management system, designed for users to submit various types of requests such as Discord reports, support requests, and guild applications. Administrators can manage these requests with advanced control options. Additionally, the system incorporates a cryptocurrency payment feature, allowing users to support the project using different crypto wallets.
 
