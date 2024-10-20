@@ -30,7 +30,7 @@ For more info, please visit **https://pay.notreal003.xyz** :)
 
 ### Backend Setup
 1. Clone the repository:  
-`git clone https://github.com/NotReal003/REQUEST_PAGE_API.git`
+`git clone https://github.com/NotReal003/API.git`
 2. Install dependencies:  
 ```bash
 npm install
