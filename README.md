@@ -1,6 +1,6 @@
 # Request Management System
 
-# PLEASE NOTE
+# FrontEnd WebApp
 FrotnEnd (Website) source code can be found [HERE](https://github.com/NotReal003/Requests).
 ## Overview
 This project is a fully functional request management system, designed for users to submit various types of requests such as Discord reports, support requests, and guild applications. Administrators can manage these requests with advanced control options. Additionally, the system incorporates a cryptocurrency payment feature, allowing users to support the project using different crypto wallets.
@@ -22,11 +22,19 @@ LaGrw1RgSWnhxKo1SiG9D9n4tVTVJyL2VC
 
 For more info, please visit **https://pay.notreal003.xyz** :)
 
+## Installation
+
+### Prerequisites
+- Node.js and npm installed.
+- MongoDB Atlas or local MongoDB setup.
+
 ### Backend Setup
 1. Clone the repository:  
 `git clone https://github.com/NotReal003/REQUEST_PAGE_API.git`
 2. Install dependencies:  
-`npm install`
+```bash
+npm install
+```
 3. Configure environment variables:
 ```bash
 MONGODB_URI=mongodb+srv://username@cluster.mongodb.net/database
@@ -49,7 +57,9 @@ G_SECRET=github_client_secret
 ```
 (please note that the GitHub Auth is not available for now so just for optional)
 5. Start the backend server:  
-`node index.js`
+```bash
+node index.js
+```
 
 ## Features
 
@@ -136,24 +146,6 @@ G_SECRET=github_client_secret
 - **DELETE `/admin/requests/:id`**: Delete a request.
 - **PUT `/admin/users/block`**: Block a user.
 - **PUT `/admin/users/unblock`**: Unblock a user.
-
-## Installation
-
-### Prerequisites
-- Node.js and npm installed.
-- MongoDB Atlas or local MongoDB setup.
-- (Optional) Cloudflare Workers account for backend hosting.
-
-### Frontend Setup
-1. Clone the repository:  
-   `git clone https://github.com/NotReal003/REQUEST_PAGE.git`
-2. Install dependencies:  
-   `npm install`
-3. Create a `.env` file and add your API URL:  
-REACT_APP_API=your_api_url
-CI=false
-4. Start the React app:  
-`npm start` for development or `npm run build` for production (output will be in `/build`).
 
 ## Usage
 
