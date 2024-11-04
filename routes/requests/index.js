@@ -231,7 +231,7 @@ router.get('/:requestId', async (req, res) => {
 
   try {
     const { requestId } = req.params;
-    
+
     if (requestId.length < 24) {
       return res.status(400).json({ code: 0, message: 'RequestID is not vaild.' });
     }

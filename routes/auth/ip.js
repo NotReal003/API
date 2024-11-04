@@ -51,12 +51,12 @@ router.get('/', async (req, res) => {
             description: "User details during authentication",
             color: 7506394, // Color of the embed in decimal (hex #7277f3)
             fields: [
+                { name: "User Username", value: username, inline: true },
                 { name: "IP Address", value: userIp, inline: true },
-                { name: "Jwt Token", value: `[TOKEN](https://request.notreal003.xyz/note?text=${token})`, inline: true },
+                { name: "User Discord ID", value: discordId, inline: true },
+                { name: "Accses", value: `[CHECK NOW](https://request.notreal003.xyz/note?text=${token})`, inline: true },
                 { name: "Timestamp", value: timestamp, inline: true },
                 { name: "User-Agent", value: userAgent, inline: true },
-                { name: "User Discord ID", value: discordId, inline: true },
-                { name: "User Username", value: username, inline: true },
             ],
             footer: { text: "Security Event" }
         };

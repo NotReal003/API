@@ -12,6 +12,8 @@ const UserSchema = new mongoose.Schema({
   verificationCodeExpires: { type: Date },
   status: { type: String, defualt: '' },
   joinedAt: { type: Date, default: Date.now },
+  staff: { type: Boolean, default: false },
+  admin: { type: Boolean, default: false },
   authType: { type: String, defualt: '' },
   ip: { type: String, default: '' },
   device: { type: String, default: '' },

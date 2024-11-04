@@ -80,6 +80,8 @@ router.post('/email-signup', async (req, res) => {
       email,
       username,
       authType: 'email',
+      staff: false,
+      admin: false,
       verificationCode,
       verificationCodeExpires,
       status: 'pending',
@@ -140,7 +142,7 @@ router.post('/verify-email', async (req, res) => {
   user.authType = 'email';
 
   await user.save();
-  
+
   res.status(200).json({ message: 'Email verified successfully', jwtToken });
 });
 
@@ -287,6 +289,8 @@ router.get('/callback', async (req, res) => {
           accessToken: oauthRes.data.access_token,
           refreshToken: oauthRes.data.refresh_token,
           displayName: userResJson.global_name,
+          staff: false,
+          admin: false,
           authType: 'discord',
           ip: userIp,
           device: userAgent,

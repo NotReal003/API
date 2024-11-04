@@ -9,7 +9,7 @@ router.put('/manage-api', async (req, res) => {
   const token = req.headers['authorization'];
 
   if (!token) {
-    return res.status(401).json({ message: 'A: Unauthorized' });
+    return res.status(401).json({ message: 'A: 401 Unauthorized' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {

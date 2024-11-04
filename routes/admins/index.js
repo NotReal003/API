@@ -16,9 +16,9 @@ router.delete('/:requestId', async (req, res) => {
     if (user.id === process.env.ADMIN_ID) {
       user.isAdmin = true;
     }
-    
+
   if (!user.isAdmin) {
-    return res.status(403).json({ code: 0, message: 'You do not have permission to manage this request.' });
+    return res.status(403).json({ code: 0, message: 'You do not have permission to delete this request.' });
   }
 
   try {
@@ -36,6 +36,37 @@ router.delete('/:requestId', async (req, res) => {
   }
 });
 
+router.delete('/requests/:userId', async (req, res) => {
+  const user = await req.user;
+
+  if (!user) {
+    return res.status(401).json({ code: 0, message: 'Unauthorized' });
+  }
+  if (user.id === process.env.ADMIN_ID) {
+    user.isAdmin = true;
+  }
+
+  if (!user.isAdmin) {
+    return res.status(403).json({ code: 0, message: 'You do not have permission to delete these requests.' });
+  }
+
+  try {
+    const { userId } = req.params;
+
+    // Delete all requests for the specified user
+    const deleteResult = await Request.deleteMany({ id: userId });
+
+    if (deleteResult.deletedCount === 0) {
+      return res.status(404).json({ code: 0, message: 'No requests found for this user.' });
+    }
+
+    res.status(200).json({ message: `Successfully deleted ${deleteResult.deletedCount} requests for user.` });
+  } catch (error) {
+    console.error('Error while deleting requests:', error);
+    res.status(500).json({ message: 'Failed to delete requests. Please try again later.' });
+  }
+});
+
 router.put('/:requestId', async (req, res) => {
   const user = await req.user;
   const { requestId } = req.params;
@@ -49,7 +80,7 @@ router.put('/:requestId', async (req, res) => {
     return res.status(401).json({ code: 0, message: 'Unauthorized' });
   }
 
-  if (user.id === process.env.ADMIN_ID) {
+  if (user.staff === true || user.id === process.env.ADMIN_ID) {
     user.isAdmin = true;
   }
 
@@ -95,7 +126,7 @@ router.get('/requests', async (req, res) => {
 
   try {
     // Ensure the user is an admin based on their Discord ID
-    if (user.id === process.env.ADMIN_ID || user.isAdmin) {
+    if (user.id === process.env.ADMIN_ID || user.staff === true) {
       // Fetch all requests if the user is an admin
       const allRequests = await Request.find();
       return res.status(200).json(allRequests);
@@ -124,7 +155,7 @@ router.get('/requests/:requestId', async (req, res) => {
     }
 
     // Ensure that the user is an admin
-    if (user.id === '1131271104590270606' || user.isAdmin) {
+    if (user.id === process.env.ADMIN_ID || user.staff === true) {
       return res.status(200).json(request);
     } else {
       return res.status(403).json({ code: 0, message: 'You do not have permission to view this request.' });
@@ -143,12 +174,12 @@ router.post('/send/email', async (req, res) => {
       return res.status(403).json({ code: 0, message: 'A: Unauthorized' });
   }
 
-  if (user.id === process.env.ADMIN_ID) {
+  if (user.id === process.env.ADMIN_ID || user.staff === true) {
       user.isAdmin = true;
   }
 
   if (!user.isAdmin) {
-      return res.status(403).json({ code: 0, message: 'You do not have permission to manage this request.' });
+      return res.status(403).json({ code: 0, message: 'You do not have permission to send emails' });
   }
 
   try {
@@ -186,6 +217,35 @@ router.post('/send/email', async (req, res) => {
   } catch (error) {
       console.error('Error sending email:', error);
       res.status(500).json({ message: 'Failed to send email. Please try again later.' });
+  }
+});
+
+router.delete('/users/:deleteUser', async (req, res) => {
+  const user = await req.user;
+
+  if (!user) {
+    return res.status(401).json({ code: 0, message: 'Unauthorized' });
+  }
+    if (user.id === process.env.ADMIN_ID) {
+      user.isAdmin = true;
+    }
+
+  if (!user.isAdmin) {
+    return res.status(403).json({ code: 0, message: 'You do not have permission to manage users' });
+  }
+
+  try {
+    const { deleteUser } = req.params;
+    const request = await User.findOneAndDelete({ id: deleteUser });
+
+    if (!request) {
+      return res.status(404).json({ code: 0, message: 'User not found.' });
+    }
+
+    res.status(200).json({ message: 'User deleted successfully.' });
+  } catch (error) {
+    console.error('Error while deleting user:');
+    res.status(500).json({ message: 'Failed to delete user. Please try again later.' });
   }
 });
 

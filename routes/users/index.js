@@ -11,7 +11,7 @@ router.get('/@me', async (req, res) => {
       return res.status(403).json({ message: 'U1: Unauthorized' });
     }
     const user = await req.user;
-    
+
     if (!user) {
       return res.status(401).json({ code: 0, message: 'U2: Unauthorized' });
     }
@@ -34,6 +34,8 @@ router.get('/@me', async (req, res) => {
         avatar: user.avatarHash,
         authType: user.authType,
         joinedAt: user.joinedAt,
+        staff: user.staff,
+        admin: user.admin,
       });
     }
     if (!user.accessToken) {
@@ -71,6 +73,8 @@ router.get('/@me', async (req, res) => {
       displayName: user.displayName,
       joinedAt: user.joinedAt,
       authType: user.authType,
+      staff: user.staff,
+      admin: user.admin,
     });
   } catch (error) {
     console.error('Error fetching user data:', error);
@@ -192,7 +196,7 @@ router.put('/unblock', async (req, res) => {
       return res.status(404).json({ code: 0, message: 'This user is not blocked.' })
     }
     imblocked.blocked = blockType;
-      
+
     // Save the blocked user entry
     await imblocked.save();
     res.status(200).json({ code: 1, message: 'User unblocked successfully!', imblocked });
