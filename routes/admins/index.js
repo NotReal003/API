@@ -13,7 +13,7 @@ router.delete('/:requestId', async (req, res) => {
   if (!user) {
     return res.status(401).json({ code: 0, message: 'Unauthorized' });
   }
-    if (user.id === process.env.ADMIN_ID) {
+    if (user.admin === true) {
       user.isAdmin = true;
     }
 
@@ -42,7 +42,7 @@ router.delete('/requests/:userId', async (req, res) => {
   if (!user) {
     return res.status(401).json({ code: 0, message: 'Unauthorized' });
   }
-  if (user.id === process.env.ADMIN_ID) {
+  if (user.admin === true) {
     user.isAdmin = true;
   }
 
@@ -80,7 +80,7 @@ router.put('/:requestId', async (req, res) => {
     return res.status(401).json({ code: 0, message: 'Unauthorized' });
   }
 
-  if (user.staff === true || user.id === process.env.ADMIN_ID) {
+  if (user.staff === true || user.admin === true) {
     user.isAdmin = true;
   }
 
@@ -126,7 +126,7 @@ router.get('/requests', async (req, res) => {
 
   try {
     // Ensure the user is an admin based on their Discord ID
-    if (user.id === process.env.ADMIN_ID || user.staff === true) {
+    if (user.admin === true || user.staff === true) {
       // Fetch all requests if the user is an admin
       const allRequests = await Request.find();
       return res.status(200).json(allRequests);
@@ -155,7 +155,7 @@ router.get('/requests/:requestId', async (req, res) => {
     }
 
     // Ensure that the user is an admin
-    if (user.id === process.env.ADMIN_ID || user.staff === true) {
+    if (user.admin === true || user.staff === true) {
       return res.status(200).json(request);
     } else {
       return res.status(403).json({ code: 0, message: 'You do not have permission to view this request.' });
@@ -226,7 +226,7 @@ router.delete('/users/:deleteUser', async (req, res) => {
   if (!user) {
     return res.status(401).json({ code: 0, message: 'Unauthorized' });
   }
-    if (user.id === process.env.ADMIN_ID) {
+    if (user.admin === true) {
       user.isAdmin = true;
     }
 
@@ -246,6 +246,28 @@ router.delete('/users/:deleteUser', async (req, res) => {
   } catch (error) {
     console.error('Error while deleting user:');
     res.status(500).json({ message: 'Failed to delete user. Please try again later.' });
+  }
+});
+
+router.get('/users', async (req, res) => {
+  const user = await req.user;
+
+  if (!user) {
+    return res.status(401).json({ code: 0, message: 'Unauthorized' });
+  }
+
+  try {
+    // Ensure the user is an admin based on their Discord ID
+    if (user.admin === true) {
+      // Fetch all requests if the user is an admin
+      const allRequests = await User.find();
+      return res.status(200).json(allRequests);
+    } else {
+      return res.status(403).json({ code: 0, message: 'You do not have permission to view these users.' });
+    }
+  } catch (error) {
+    console.error('Error fetching users');
+    res.status(500).json({ message: 'Failed to fetch users. Please try again later.' });
   }
 });
 
