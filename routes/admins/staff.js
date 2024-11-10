@@ -63,7 +63,7 @@ router.put('/demote/:demoUser', async (req, res) => {
       res.status(400).json({ message: 'This user is not staff member.' });
     }
 
-    request.staff = true;
+    request.staff = false;
     await request.save();
     res.status(200).json({ message: 'Demoted staff to normal user successfully!' });
   } catch (error) {
