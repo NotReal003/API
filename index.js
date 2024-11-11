@@ -8,13 +8,13 @@ require("dotenv").config();
 
 const app = express();
 
-//app.use(
-//  cors({
-//    credentials: true,
-//    origin: "https://request.notreal003.xyz",
-//    allowedHeaders: ["Authorization", "Content-Type"],
-//  }),
-//);
+app.use(
+  cors({
+    credentials: true,
+    origin: "https://request.notreal003.xyz",
+    allowedHeaders: ["Authorization", "Content-Type"],
+  }),
+);
 app.use(cookieParser());
 app.use(express.json());
 app.use(baseMiddleware);
