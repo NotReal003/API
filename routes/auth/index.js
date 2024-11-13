@@ -441,25 +441,24 @@ router.get('/github/callback', async (req, res) => {
 });
 
 router.get('/signout', async (req, res) => {
-
   const token = req.headers['authorization'];
-  if (token) {
 
+  if (token) {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
         return res.status(200).json({ message: 'Not Safe' });
       }
-      
-    const request = new Blacklist({
-      blacklistToken: token,
-    });
 
-    await request.save();
-    res.status(200).json({ message: 'Successfully logged out!' });
+      const request = new Blacklist({
+        blacklistToken: token,
+      });
+
+      await request.save();
+      return res.status(200).json({ message: 'Successfully logged out!' });
+    });
   } else {
-    res.sendStatus(200);
+    return res.status(200).json({ message: 'Auth is missing' });
   }
-  res.sendStatus(200);
 });
 
 module.exports = router;
