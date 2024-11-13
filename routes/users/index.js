@@ -89,6 +89,11 @@ router.put('/display', async (req, res) => {
     return res.status(400).json({ code: 0, message: 'Display name cannot be empty.' });
   }
 
+  if (displayName.length < 3 || displayName.length > 16) {
+    setError('Display name must be between 3 and 16 characters.');
+    return;
+  }
+
   try {
     const user = await req.user;
     const userDoc = await User.findOne({ id: user.id }); // Use the correct

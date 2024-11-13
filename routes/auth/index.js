@@ -42,6 +42,12 @@ router.post('/email-signup', async (req, res) => {
   if (!email || !username) {
     return res.status(400).json({ message: 'Email and username are required' });
   }
+
+  if (username.length < 3 || username.length > 16) {
+    setError('Username name must be between 3 and 16 characters.');
+    return;
+  }
+  
   const userIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   const userAgent = req.headers['user-agent'];
 
