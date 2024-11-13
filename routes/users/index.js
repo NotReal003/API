@@ -90,8 +90,7 @@ router.put('/display', async (req, res) => {
   }
 
   if (displayName.length < 3 || displayName.length > 16) {
-    setError('Display name must be between 3 and 16 characters.');
-    return;
+    return res.status(400).json({ message: 'Display name must be between 3 and 16 characters.' });
   }
 
   try {
