@@ -4,4 +4,4 @@ const blacklistSchema = new mongoose.Schema({
   blacklistToken: { type: String },
 });
 
-module.exports = mongoose.model('Blacklist', BlacklistSchema);
+module.exports = mongoose.model('Blacklist', blacklistSchema);
