@@ -3,6 +3,7 @@ require('dotenv').config();
 const Server = require('../models/Server');
 const User = require('../models/User');
 const Buser = require('../models/Buser');
+const Blacklist = require('../models/Blacklist');
 
 const authMiddleware = async (req, res, next) => {
   const publicPaths = [
@@ -40,6 +41,12 @@ const authMiddleware = async (req, res, next) => {
 
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const blackToken = await Blacklist.findOne({ blacklistToken: token });
+
+  if (blackToken) {
+    return res.status(403).json({ message: 'You are not allowed to access this API.' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {

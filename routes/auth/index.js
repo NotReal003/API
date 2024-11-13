@@ -9,6 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const Blacklist = require('../../models/Blacklist');
 
 // GET: api.notreal003.xyz/auth/signin
 // GET: api.notreal003.xyz/auth/callback
@@ -440,6 +441,18 @@ router.get('/github/callback', async (req, res) => {
 });
 
 router.get('/signout', (req, res) => {
+
+  const token = req.headers['authorization'];
+  if (token) {
+    const request = new Blacklist({
+      blacklistToken: token,
+    });
+
+    await request.save();
+    res.status(200).json({ message: 'Successfully logged out!' });
+  } else {
+    res.sendStatus(200);
+  }
   res.sendStatus(200);
 });
 
