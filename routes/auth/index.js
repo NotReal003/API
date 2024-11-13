@@ -444,6 +444,12 @@ router.get('/signout', async (req, res) => {
 
   const token = req.headers['authorization'];
   if (token) {
+
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+      if (err) {
+        return res.status(200).json({ message: 'Not Safe' });
+      }
+      
     const request = new Blacklist({
       blacklistToken: token,
     });
