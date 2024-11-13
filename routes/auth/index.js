@@ -440,7 +440,7 @@ router.get('/github/callback', async (req, res) => {
   }
 });
 
-router.get('/signout', (req, res) => {
+router.get('/signout', async (req, res) => {
 
   const token = req.headers['authorization'];
   if (token) {
