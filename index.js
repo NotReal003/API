@@ -12,7 +12,6 @@ app.use(
   cors({
     credentials: true,
     origin: "https://request.notreal003.xyz",
-    allowedHeaders: ["Authorization", "Content-Type"],
   }),
 );
 app.use(cookieParser());
