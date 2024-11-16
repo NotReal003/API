@@ -475,8 +475,7 @@ router.get('/signout', async (req, res) => {
       if (err) {
         return res
           .status(201)
-          .clearCookie('token')
-          .redirect('https://request.notreal003.xyz');
+          .clearCookie('token');
       }
 
       const request = new Blacklist({
@@ -487,14 +486,12 @@ router.get('/signout', async (req, res) => {
 
       return res
         .status(200)
-        .clearCookie('token')
-        .redirect('https://request.notreal003.xyz');
+        .clearCookie('token');
     });
   } else {
     return res
       .status(204) // Use 204 to indicate no content (no token to sign out)
-      .clearCookie('token')
-      .redirect('https://request.notreal003.xyz');
+      .clearCookie('token');
   }
 });
 
