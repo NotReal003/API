@@ -478,7 +478,7 @@ router.get('/signout/lets/see', async (req, res) => {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
         return res
-          .status(201).json({ message: 'You are logged out..' });
+          .status(201).json({ message: 'You are logged out..' })
           .clearCookie('token');
       }
 
@@ -489,12 +489,12 @@ router.get('/signout/lets/see', async (req, res) => {
       await request.save();
 
       return res
-        .status(200).json({ message: 'Successfully logged out!' });
+        .status(200).json({ message: 'Successfully logged out!' })
         .clearCookie('token');
     });
   } else {
     return res
-      .status(204).json({ message: 'You are not logged in.' });
+      .status(204).json({ message: 'You are not logged in.' })
       .clearCookie('token');
   }
 });
