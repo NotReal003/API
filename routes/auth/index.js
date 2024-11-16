@@ -326,12 +326,15 @@ router.get('/callback', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
-    res.cookie('token', token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'Strict',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // (7 days)
-  });
+    res
+    .cookie('token', token, {
+      domain: 'notreal003.xyz',
+      httpOnly: true,
+      // expires: new Date(Date.now() + 6.048e8),
+      secure: process.env.NODE_ENV === 'development',
+      maxAge: 6.048e8,
+      // sameSite: ''
+    })
     res.status(200).json({ jwtToken: token });
   } catch (error) {
     console.error('Error during callback processing:', error.message);
