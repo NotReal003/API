@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
         // Fetch user details from /users/@me endpoint using the token
         try {
             const userResponse = await axios.get(userApiUrl, {
-                headers: { Authorization: `${token}` }
+                withCredentials: true,
             });
 
             if (userResponse.data) {

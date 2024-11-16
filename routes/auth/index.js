@@ -454,18 +454,27 @@ router.get('/signout', async (req, res) => {
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
-        return res.clearCookie('token').sendStatus(204);
-      }
+      return res
+      .status(204)
+          .clearCookie('token').sendStatus(200);
+      .redirect('https://request.notreal003.xyz/');
 
       const request = new Blacklist({
         blacklistToken: token,
       });
 
       await request.save();
-      return res.clearCookie('token').sendStatus(200);
+      return res
+    .status(200)
+        .clearCookie('token').sendStatus(200);
+    .redirect('https://request.notreal003.xyz/');
+  
     });
   } else {
-    return res.clearCookie('token').sendStatus(204);
+    return return res
+    .status(204)
+        .clearCookie('token').sendStatus(200);
+    .redirect('https://request.notreal003.xyz/');
   }
 });
 
