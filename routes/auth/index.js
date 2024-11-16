@@ -454,28 +454,30 @@ router.get('/signout', async (req, res) => {
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
-      return res
-      .status(204)
-          .clearCookie('token').sendStatus(200);
-      .redirect('https://request.notreal003.xyz/');
+        return res
+          .status(204)
+          .clearCookie('token')
+          .redirect('https://request.notreal003.xyz/');
+      }
 
       const request = new Blacklist({
         blacklistToken: token,
       });
 
       await request.save();
+
       return res
-    .status(200)
-        .clearCookie('token').sendStatus(200);
-    .redirect('https://request.notreal003.xyz/');
-  
+        .status(200)
+        .clearCookie('token')
+        .redirect('https://request.notreal003.xyz/');
     });
   } else {
-    return return res
-    .status(204)
-        .clearCookie('token').sendStatus(200);
-    .redirect('https://request.notreal003.xyz/');
+    return res
+      .status(204) // Use 204 to indicate no content (no token to sign out)
+      .clearCookie('token')
+      .redirect('https://request.notreal003.xyz/');
   }
 });
+
 
 module.exports = router;
