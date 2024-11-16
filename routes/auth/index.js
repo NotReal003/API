@@ -467,7 +467,11 @@ router.get('/github/callback', async (req, res) => {
   }
 });
 
-router.get('/signout', async (req, res) => {
+router.get('/signout', (req, res) => {
+  res.clearCookie('token').sendStatus(200);
+});
+
+router.get('/signout/lets/see', async (req, res) => {
   const token = req.cookies.token;
 
   if (token) {
@@ -494,6 +498,5 @@ router.get('/signout', async (req, res) => {
       .clearCookie('token');
   }
 });
-
 
 module.exports = router;
