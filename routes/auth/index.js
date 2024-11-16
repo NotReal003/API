@@ -449,13 +449,12 @@ router.get('/github/callback', async (req, res) => {
 });
 
 router.get('/signout', async (req, res) => {
-  const token = req.headers['authorization'];
-  res.clearCookie('token');
+  const token = req.cookies.token;
 
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
-        return res.status(200).json({ message: 'Not Safe' });
+        return res.clearCookie('token').sendStatus(204);
       }
 
       const request = new Blacklist({
@@ -463,10 +462,10 @@ router.get('/signout', async (req, res) => {
       });
 
       await request.save();
-      return res.status(200).json({ message: 'Successfully logged out!' });
+      return res.clearCookie('token').sendStatus(200);
     });
   } else {
-    return res.status(200).json({ message: 'Auth is missing' });
+    return res.clearCookie('token').sendStatus(204);
   }
 });
 

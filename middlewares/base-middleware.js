@@ -37,7 +37,7 @@ const authMiddleware = async (req, res, next) => {
     return res.status(502).json({ message: 'The API and Services are currently unavailable.' });
   }
 
-  const token = req.headers['authorization'];
+  const token = req.cookies.token;
 
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
