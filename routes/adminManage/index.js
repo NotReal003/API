@@ -51,7 +51,7 @@ router.put('/manage-api', async (req, res) => {
 
       await myServer.save();
 
-      res.status(200).json({ code: 1, message: 'Server updated successfully!' });
+      res.status(200).json({ code: 1, message: 'Server updated successfully!', token });
     } catch (error) {
       console.error('Error updating server:', error);
       res.status(500).json({ code: 0, message: 'Failed to update server status. Please try again later.' });
