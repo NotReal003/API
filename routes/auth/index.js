@@ -474,7 +474,7 @@ router.get('/signout', async (req, res) => {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
         return res
-          .status(201)
+          .status(201).json({ message: 'You are logged out..' });
           .clearCookie('token');
       }
 
@@ -485,12 +485,12 @@ router.get('/signout', async (req, res) => {
       await request.save();
 
       return res
-        .status(200)
+        .status(200).json({ message: 'Successfully logged out!' });
         .clearCookie('token');
     });
   } else {
     return res
-      .status(204) // Use 204 to indicate no content (no token to sign out)
+      .status(204).json({ message: 'You are not logged in.' });
       .clearCookie('token');
   }
 });
