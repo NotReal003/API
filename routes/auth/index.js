@@ -455,7 +455,7 @@ router.get('/signout', async (req, res) => {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
       if (err) {
         return res
-          .status(204)
+          .status(201)
           .clearCookie('token')
           .redirect('https://request.notreal003.xyz/');
       }
