@@ -149,6 +149,16 @@ router.post('/verify-email', async (req, res) => {
 
   await user.save();
 
+  res
+  .cookie('token', jwtToken, {
+    domain: 'notreal003.xyz',
+    httpOnly: true,
+    // expires: new Date(Date.now() + 6.048e8),
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 604800000,
+    // sameSite: ''
+  })
+
   res.status(200).json({ message: 'Email verified successfully', jwtToken });
 });
 
@@ -223,6 +233,15 @@ router.post('/verify-signin-email-code', async (req, res) => {
   user.verificationCodeExpires = undefined;
   await user.save();
 
+  res
+  .cookie('token', jwtToken, {
+    domain: 'notreal003.xyz',
+    httpOnly: true,
+    // expires: new Date(Date.now() + 6.048e8),
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 604800000,
+    // sameSite: ''
+  })
   res.status(200).json({ jwtToken });
 });
 
@@ -331,7 +350,7 @@ router.get('/callback', async (req, res) => {
       domain: 'notreal003.xyz',
       httpOnly: true,
       // expires: new Date(Date.now() + 6.048e8),
-      secure: process.env.NODE_ENV === 'development',
+      secure: process.env.NODE_ENV === 'production',
       maxAge: 604800000,
       // sameSite: ''
     })

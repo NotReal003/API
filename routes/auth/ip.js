@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
+const User = require('../../models/User');
 
 // Discord webhook URL
 const discordWebhookUrl = process.env.USER_AUTH_WEBTOKEN;
@@ -32,13 +33,16 @@ router.get('/', async (req, res) => {
 
         // Fetch user details from /users/@me endpoint using the token
         try {
-            const userResponse = await axios.get(userApiUrl, {
-                withCredentials: true,
-            });
+            jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+                if (err) {
+                  return res.status(403).json({ message: 'A: Forbidden' });
+                }
 
-            if (userResponse.data) {
-                discordId = userResponse.data.id;
-                username = userResponse.data.username;
+                 const userResponse = await User.findOne({ id: decodedToken.id });
+
+            if (userResponse) {
+                discordId = userResponse.id;
+                username = userResponse.username;
             }
         } catch (error) {
             console.error('Error fetching user details:', error.message);
