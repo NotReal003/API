@@ -6,7 +6,7 @@ const User = require('../../models/User');
 
 router.put('/manage-api', async (req, res) => {
   const { closeType, user } = req.body;
-  const token = req.headers['authorization'];
+  const token = req.cookies.jwtToken;
 
   if (!token) {
     return res.status(401).json({ message: 'A: 401 Unauthorized' });
