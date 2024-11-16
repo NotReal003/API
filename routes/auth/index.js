@@ -332,7 +332,7 @@ router.get('/callback', async (req, res) => {
       httpOnly: true,
       // expires: new Date(Date.now() + 6.048e8),
       secure: process.env.NODE_ENV === 'development',
-      maxAge: 6.048e8,
+      maxAge: 604800000,
       // sameSite: ''
     })
     res.status(200).json({ jwtToken: token });
