@@ -450,6 +450,7 @@ router.get('/github/callback', async (req, res) => {
 
 router.get('/signout', async (req, res) => {
   const token = req.headers['authorization'];
+  res.clearCookie('token');
 
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
