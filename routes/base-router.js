@@ -13,6 +13,7 @@ router.use('/auth', require('./auth/internal/discord'));
 router.use('/auth/user', require('./auth/internal/ip'));
 router.use('/admin', require('./admins'));
 router.use('/server', require('./adminManage'));
-router.use('/admin/staff', require('./admins/staff'))
+router.use('/admin', require('./admins/internal'));
+router.use('/admin/staff', require('./admins/internal/staff'));
 
 module.exports = router;
