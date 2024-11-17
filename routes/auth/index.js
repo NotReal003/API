@@ -150,15 +150,13 @@ router.post('/verify-email', async (req, res) => {
   await user.save();
 
   res
-  .cookie('token', jwtToken, {
-    domain: 'notreal003.xyz',
-    httpOnly: true,
-    // expires: new Date(Date.now() + 6.048e8),
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 604800000,
-    // sameSite: ''
-  })
-
+    .cookie('token', token, {
+      domain: 'request.notreal003.xyz',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 604800000,
+      // sameSite: 'Strict' // Ensuring sameSite is set for security
+    })
   res.status(200).json({ message: 'Email verified successfully', jwtToken });
 });
 
@@ -235,7 +233,7 @@ router.post('/verify-signin-email-code', async (req, res) => {
 
   res
   .cookie('token', jwtToken, {
-    domain: 'notreal003.xyz',
+    domain: 'request.notreal003.xyz',
     httpOnly: true,
     // expires: new Date(Date.now() + 6.048e8),
     secure: process.env.NODE_ENV === 'production',
@@ -347,7 +345,7 @@ router.get('/callback', async (req, res) => {
     );
     res
     .cookie('token', token, {
-      domain: 'notreal003.xyz',
+      domain: 'request.notreal003.xyz',
       httpOnly: true,
       // expires: new Date(Date.now() + 6.048e8),
       secure: process.env.NODE_ENV === 'production',
@@ -468,7 +466,7 @@ router.get('/github/callback', async (req, res) => {
 });
 
 router.get('/signout', (req, res) => {
-  res.clearCookie('token').sendStatus(200);
+  res.clearCookie('token', { domain: 'request.notreal003.xyz' }).sendStatus(200);
 });
 
 router.get('/signout/lets/see', async (req, res) => {
