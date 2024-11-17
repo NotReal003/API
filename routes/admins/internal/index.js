@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const blackList = require('../../../models/Blacklist');
 
-router.get('/users/blacklist', async (req, res) => {
+router.get('/code/blacklist', async (req, res) => {
   const user = await req.user;
 
   if (!user) return res.status(401).json({ message: 'Unauthorized' });
