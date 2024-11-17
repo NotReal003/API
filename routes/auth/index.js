@@ -465,12 +465,8 @@ router.get('/github/callback', async (req, res) => {
 });
 
 router.get('/signout', (req, res) => {
-  res.clearCookie('token', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'None',
-});
-  res.sendStatus(404);
+  res.clearCookie('token', { httpOnly: true, secure: true });
+  return res.sendStatus(204);;
 });
 router.get('/signout/lets/see', async (req, res) => {
   const token = req.cookies.token;
