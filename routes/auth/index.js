@@ -151,7 +151,7 @@ router.post('/verify-email', async (req, res) => {
 
   res
     .cookie('token', token, {
-      domain: 'notreal003.xyz',
+      domain: 'request.notreal003.xyz',
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 604800000,
@@ -233,7 +233,7 @@ router.post('/verify-signin-email-code', async (req, res) => {
 
   res
   .cookie('token', jwtToken, {
-    domain: 'notreal003.xyz',
+    domain: 'request.notreal003.xyz',
     httpOnly: true,
     // expires: new Date(Date.now() + 6.048e8),
     secure: process.env.NODE_ENV === 'production',
@@ -345,7 +345,7 @@ router.get('/callback', async (req, res) => {
     );
     res
     .cookie('token', token, {
-      domain: 'notreal003.xyz',
+      domain: 'request.notreal003.xyz',
       httpOnly: true,
       // expires: new Date(Date.now() + 6.048e8),
       secure: process.env.NODE_ENV === 'production',
@@ -468,7 +468,7 @@ router.get('/github/callback', async (req, res) => {
 router.get('/signout', (req, res) => {
   res
     .cookie('token', '', {
-      domain: 'notreal003.xyz',
+      domain: 'request.notreal003.xyz',
       httpOnly: true,
       // expires: new Date(Date.now() + 6.048e8),
       secure: process.env.NODE_ENV === 'production',
