@@ -345,7 +345,6 @@ router.get('/callback', async (req, res) => {
     );
     res
     .cookie('token', token, {
-      domain: 'request.notreal003.xyz',
       httpOnly: true,
       // expires: new Date(Date.now() + 6.048e8),
       secure: process.env.NODE_ENV === 'production',
