@@ -37,7 +37,7 @@ router.get('/signout', async (req, res) => {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Add token to blacklist
-    await Blacklist.create({ blacklistToken: token });
+    await Blacklist.create({ blacklistToken: token, user_id: decodedToken.id });
 
     res.clearCookie('token', { httpOnly: true, secure: true });
     return res.status(200).json({ message: 'Successfully logged out.' });
