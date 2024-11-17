@@ -107,7 +107,7 @@ router.get('/callback', async (req, res) => {
       maxAge: 604800000,
       // sameSite: ''
     })
-    res.status(200).json({ message: 'Succesfully logged in with Discord.' });
+    res.status(200).json({ message: 'Succesfully logged in with Discord.', jwtToken: token });
   } catch (error) {
     console.error('Error during callback processing:', error.message);
     res.status(406).json({ message: 'We are sorry, there was a problem while processing. You can close this window and try again! ErrorType: SignIn' });

@@ -100,7 +100,7 @@ router.post('/verify-signin-email-code', async (req, res) => {
       maxAge: 604800000, // 7 days in milliseconds
     });
 
-    return res.status(200).json({ message: 'Successfully logged in with email.' });
+    return res.status(200).json({ message: 'Successfully logged in with email.', jwtToken });
   } catch (error) {
     console.error('Error in verify-signin-email-code route:', error);
     return res.status(500).json({ message: 'Internal server error' });

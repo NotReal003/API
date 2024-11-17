@@ -136,7 +136,7 @@ router.post('/verify-email', async (req, res) => {
       maxAge: 604800000,
       // sameSite: 'Strict' // Ensuring sameSite is set for security
     })
-  res.status(200).json({ message: 'Email verified successfully' });
+  res.status(200).json({ message: 'Email verified successfully', jwtToken });
 });
 
 module.exports = router;
