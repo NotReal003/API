@@ -466,7 +466,15 @@ router.get('/github/callback', async (req, res) => {
 });
 
 router.get('/signout', (req, res) => {
-  res.clearCookie('token', { domain: 'notreal003.xyz' }).sendStatus(200);
+  res
+    .cookie('token', '', {
+      domain: 'notreal003.xyz',
+      httpOnly: true,
+      // expires: new Date(Date.now() + 6.048e8),
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 0,
+      // sameSite: ''
+    })
 });
 
 router.get('/signout/lets/see', async (req, res) => {
