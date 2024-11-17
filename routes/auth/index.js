@@ -465,16 +465,8 @@ router.get('/github/callback', async (req, res) => {
 });
 
 router.get('/signout', (req, res) => {
-  res
-    .cookie('token', '', {
-      httpOnly: true,
-      // expires: new Date(Date.now() + 6.048e8),
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 0,
-      // sameSite: ''
-    })
-});
-
+  res.clearCookie('token').sendStatus(404);
+  
 router.get('/signout/lets/see', async (req, res) => {
   const token = req.cookies.token;
 
