@@ -29,6 +29,11 @@ router.get('/signout', async (req, res) => {
 
   try {
     // Verify the token
+    const savedToken = await Blacklist.findOne({ blacklistToken: token });
+    if (savedToken) {
+      res.clearCookie('token', { httpOnly: true, secure: true });
+      return res.status(200).json({ message: 'Successfully logged out. Active session found and already blocked.' });
+    }
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Add token to blacklist

@@ -40,13 +40,14 @@ const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ message: 'Unauthorized' });
   }
 
   const blackToken = await Blacklist.findOne({ blacklistToken: token });
 
   if (blackToken) {
-    return res.clearCookie('token').status(403).json({ message: 'You are not allowed to access this API.' });
+    res.clearCookie('token', { httpOnly: true, secure: true });
+    return res.status(403).json({ message: 'You are not allowed to access this API.' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
