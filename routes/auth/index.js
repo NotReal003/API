@@ -466,7 +466,7 @@ router.get('/github/callback', async (req, res) => {
 });
 
 router.get('/signout', (req, res) => {
-  res.clearCookie('token', { domain: 'request.notreal003.xyz' }).sendStatus(200);
+  res.clearCookie('token', { domain: 'api.notreal003.xyz' }).sendStatus(200);
 });
 
 router.get('/signout/lets/see', async (req, res) => {
