@@ -18,7 +18,7 @@ router.get('/github', (req, res) => {
   res.redirect(backUrl);
 });
 
-router.get('/signout', async (req, res) => {
+router.get('/signout/me/uh', async (req, res) => {
   const token = req.cookies.token;
 
   // Clear cookie regardless of token presence
@@ -52,9 +52,9 @@ router.get('/signout', async (req, res) => {
   }
 });
 
-module.exports = router;
+router.get('/signout', (req, res) => {
+  res.clearCookie('token', { httpOnly: true, secure: true });
+  return res.sendStatus(204);;
+});
 
-//router.get('/signout', (req, res) => {
-//  res.clearCookie('token', { httpOnly: //true, secure: true });
-//  return res.sendStatus(204);;
-//});
+module.exports = router;
