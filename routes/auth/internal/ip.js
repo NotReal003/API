@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const jwt = require('jsonwebtoken'); // Ensure jwt is imported
 const router = express.Router();
-const User = require('../../models/User');
+const User = require('../../../models/User');
 
 // Discord webhook URL
 const discordWebhookUrl = process.env.USER_AUTH_WEBTOKEN;
