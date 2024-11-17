@@ -22,9 +22,8 @@ router.get('/signout', async (req, res) => {
   const token = req.cookies.token;
 
   // Clear cookie regardless of token presence
-  res.clearCookie('token', { httpOnly: true, secure: true });
-
   if (!token) {
+    res.clearCookie('token', { httpOnly: true, secure: true });
     return res.status(200).json({ message: 'Successfully logged out. No active session found.' });
   }
 
@@ -35,10 +34,12 @@ router.get('/signout', async (req, res) => {
     // Add token to blacklist
     await Blacklist.create({ blacklistToken: token });
 
+    res.clearCookie('token', { httpOnly: true, secure: true });
     return res.status(200).json({ message: 'Successfully logged out.' });
   } catch (err) {
     // Handle invalid token or verification errors
     if (err) {
+      res.clearCookie('token', { httpOnly: true, secure: true });
       return res.status(200).json({ message: 'Successfully logged out. Invalid or expired session token.' });
     }
 
