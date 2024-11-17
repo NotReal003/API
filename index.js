@@ -14,7 +14,7 @@ app.use(
     origin: "https://request.notreal003.xyz",
   }),
 );
-app.use(cookieParser());
+app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.json());
 app.use(baseMiddleware);
 app.use("/", baseRouter);
