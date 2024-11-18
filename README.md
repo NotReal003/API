@@ -36,7 +36,7 @@ For more info, please visit **https://pay.notreal003.xyz** :)
 npm install
 ```
 3. Configure environment variables:
-```bash
+```javascript
 MONGODB_URI=mongodb+srv://username@cluster.mongodb.net/database
 JWT_SECRET=your_jwt_secret
 DISCORD_CLIENT_ID=your_discord_client_id
