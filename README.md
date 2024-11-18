@@ -1,9 +1,9 @@
-# Request Management System API
+# Request Management Portal API
 
 # FrontEnd WebApp
 FrontEnd (Website) source code can be found **[HERE](https://github.com/NotReal003/Requests)**.
 ## Overview
-This project is a fully functional request management system, designed for users to submit various types of requests such as Discord reports, support requests, and guild applications. Administrators can manage these requests with advanced control options. Additionally, the system incorporates a cryptocurrency payment feature, allowing users to support the project using different crypto wallets.
+This project is a fully functional request management portal, designed for users to submit various types of requests such as Discord reports, support requests, and guild applications. Administrators can manage these requests with advanced control options. Additionally, the system incorporates a cryptocurrency payment feature, allowing users to support the project using different crypto wallets.
 
 The system utilizes React for the frontend and Node.js with MongoDB for the backend. Features include JWT-based authentication, email notifications, request status updates, and an admin dashboard for managing user requests.
 
@@ -169,6 +169,6 @@ node index.js
 - **IP Logging**: Tracks user IP addresses for security.
 
 ### Conclusion
-This request management system offers a comprehensive solution for handling user-submitted requests with robust administrative control and security features. It also incorporates a cryptocurrency payment feature, allowing users to support the project easily. Ideal for businesses or projects needing detailed request tracking and management.
+This request management portal offers a comprehensive solution for handling user-submitted requests with robust administrative control and security features. It also incorporates a cryptocurrency payment feature, allowing users to support the project easily. Ideal for businesses or projects needing detailed request tracking and management.
 
 For further details, customization, or support, please [Contact me on Discord](https://discord.gg/sqVBrMVQmp).
