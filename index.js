@@ -21,6 +21,9 @@ app.use("/", baseRouter);
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
+app.get('/loaderio-50caa38c598dd1255c6295bd182cd73a.txt', (req, res) => {
+  res.send('loaderio-50caa38c598dd1255c6295bd182cd73a');
+});
 
 const PORT = process.env.PORT || 3001;
 
