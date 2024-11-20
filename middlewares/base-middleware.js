@@ -20,6 +20,7 @@ const authMiddleware = async (req, res, next) => {
     '/auth/verify-signin-email-code',
     '/auth/email-signin-verify',
     '/auth/github',
+    '/collect',
   ];
 
   if (publicPaths.includes(req.path)) {

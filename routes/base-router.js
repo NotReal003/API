@@ -15,5 +15,6 @@ router.use('/admin', require('./admins'));
 router.use('/server', require('./adminManage'));
 router.use('/admin', require('./admins/internal'));
 router.use('/admin/staff', require('./admins/internal/staff'));
+router.use('/collect', require('./collect'));
 
 module.exports = router;
