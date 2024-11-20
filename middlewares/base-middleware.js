@@ -21,6 +21,7 @@ const authMiddleware = async (req, res, next) => {
     '/auth/email-signin-verify',
     '/auth/github',
     '/collect',
+    '/loaderio-50caa38c598dd1255c6295bd182cd73a.txt',
   ];
 
   if (publicPaths.includes(req.path)) {
