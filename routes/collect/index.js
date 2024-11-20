@@ -6,6 +6,59 @@ const router = express.Router();
 const allowedPageTypes = ['request', 'pay', 'social'];
 
 // Route to count and increment visits for specific pages
+
+router.get('/visits', async (req, res) => {
+  const { pageType } = req.query;
+  const user = await req.user;
+
+  if (!user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  if (user.admin !== true) {
+    return res.status(403).json({ message: 'You do not have permission to view this area.'});
+  }
+
+  try {
+    if (pageType) {
+      // Validate the pageType
+      if (!allowedPageTypes.includes(pageType)) {
+        return res.status(400).json({
+          success: false,
+          message: `"pageType" must be one of the following: ${allowedPageTypes.join(', ')}`,
+        });
+      }
+
+      // Fetch the count for the specific pageType
+      const countRecord = await Count.findOne({ pageType }) || { visits: 0 };
+      return res.status(200).json({
+        success: true,
+        pageType,
+        visits: countRecord.visits,
+      });
+    }
+
+    // Fetch counts for all allowed page types
+    const counts = await Count.find({ pageType: { $in: allowedPageTypes } });
+    const response = allowedPageTypes.map((type) => {
+      const record = counts.find((count) => count.pageType === type) || { visits: 0 };
+      return { pageType: type, visits: record.visits };
+    });
+
+    res.status(200).json({
+      success: true,
+      counts: response,
+    });
+  } catch (error) {
+    console.error('Error fetching visits:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching visit counts.',
+      error: error.message,
+    });
+  }
+});
+
 router.get('/', async (req, res) => {
   const { pageType } = req.query;
 
