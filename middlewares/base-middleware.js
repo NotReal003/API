@@ -1,9 +1,12 @@
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 require('dotenv').config();
 const Server = require('../models/Server');
 const User = require('../models/User');
 const Buser = require('../models/Buser');
 const Blacklist = require('../models/Blacklist');
+
+const POST_LOGS = process.env.WEB_LOGS;
 
 const authMiddleware = async (req, res, next) => {
   const publicPaths = [
@@ -24,6 +27,7 @@ const authMiddleware = async (req, res, next) => {
   ];
 
   if (publicPaths.includes(req.path)) {
+    await logRouteUsage(req.path, req.method, 'Public');
     return next();
   }
 
@@ -72,16 +76,41 @@ const authMiddleware = async (req, res, next) => {
           return res.status(406).json({ message: 'You are blocked from submitting requests :/', reason: blockedUser.reason });
         }
       } catch (error) {
-        return res.status(500).json({ message: 'Error checking blocked status'});
+        return res.status(500).json({ message: 'Error checking blocked status' });
       }
 
       req.user = targetUser;
+      await logRouteUsage(req.path, req.method, targetUser.username || 'Unknown User');
       return next();
     }
 
     req.user = targetUser;
+    await logRouteUsage(req.path, req.method, targetUser.username || 'Unknown User');
     next();
   });
+};
+
+const logRouteUsage = async (path, method, user) => {
+  const message = {
+    embeds: [
+      {
+        title: "API Route Used",
+        color: 0x3498db,
+        fields: [
+          { name: "Route:", value: path, inline: true },
+          { name: "Method:", value: method, inline: true },
+          { name: "Accessed By:", value: user, inline: true },
+        ],
+        timestamp: new Date(),
+      },
+    ],
+  };
+
+  try {
+    await axios.post(POST_LOGS, message);
+  } catch (error) {
+    console.error("Error sending message POST LOGS:", error.message);
+  }
 };
 
 module.exports = authMiddleware;
