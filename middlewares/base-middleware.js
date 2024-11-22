@@ -25,6 +25,10 @@ const authMiddleware = async (req, res, next) => {
     '/auth/github',
     '/collect',
   ];
+  
+  if (req.path === '/health') {
+    return next(); // ignore spammed route 
+  }
 
   if (publicPaths.includes(req.path)) {
     await logRouteUsage(req.path, req.method, 'Public');
