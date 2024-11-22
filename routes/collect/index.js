@@ -59,8 +59,8 @@ router.get('/visits', async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
-  const { pageType } = req.query;
+router.get('/:pageType', async (req, res) => {
+  const { pageType } = req.params;
 
   // Validate the pageType parameter
   if (!pageType) {
