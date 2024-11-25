@@ -65,7 +65,7 @@ const authMiddleware = async (req, res, next) => {
   if (blackToken) {
     res.clearCookie('token', { httpOnly: true, secure: true });
     logRouteUsage(req.path, req.method, 'Blacklisted Token', 0xff0000); // No await
-    return res.status(403).json({ message: 'You are not allowed to access this API.' });
+    return res.status(403).json({ message: 'Your session has been expired please Login again…' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
