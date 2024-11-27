@@ -18,7 +18,7 @@ app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.json());
 app.use(baseMiddleware);
 app.use("/", baseRouter);
-app.use("/code", (req, res => {
+app.get("/code", (req, res => {
   res.redirect('https://github.com/NotReal003/API');
 });
 app.get("/health", (req, res) => {
