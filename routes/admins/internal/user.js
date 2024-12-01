@@ -39,7 +39,7 @@ router.get('/users/all', async (req, res) => {
   const token = req.headers['authorization'] || req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ error: 'A: Unauthorized' });
+    return res.status(401).json({ error: 'Unauthorized: No token provided' });
   }
 
   try {
@@ -47,35 +47,42 @@ router.get('/users/all', async (req, res) => {
 
     const myUser = await User.findOne({ id: decodedToken.id });
     if (!myUser) {
-      return res.status(401).json({ code: 0, message: 'B: Unauthorized' });
+      return res.status(401).json({ code: 0, message: 'Unauthorized: User not found' });
     }
 
     const isAdmin = myUser.id === process.env.ADMIN_ID || myUser.admin === true;
     if (!isAdmin) {
-      return res.status(403).json({ code: 0, message: 'You do not have permission to view this area.' });
+      return res.status(403).json({ code: 0, message: 'Forbidden: Admin access required' });
     }
 
-    // Fetch all users
-    const myServer = await User.find();
-    if (!myServer.length) {
-      return res.status(404).json({ message: 'Users not found' });
+    const users = await User.find({}, '-accessToken -refreshToken');
+    if (!users.length) {
+      return res.status(404).json({ message: 'No users found' });
     }
-    
-    res.status(200).json({ users: myServer });
+
+    const maskedUsers = users.map(user => ({
+      ...user.toObject(),
+      email: maskEmail(user.email),
+    }));
+
+    return res.status(200).json({ users: maskedUsers });
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
-      return res.status(403).json({ message: 'invaild Accses' });
+      return res.status(403).json({ message: 'Invalid token' });
     }
     if (error.name === 'TokenExpiredError') {
-      return res.status(403).json({ message: 'Your session has been expired' });
-    } else {
-      console.error('Error fetching users:', error);
-      res.status(500).json({ message: 'Failed to fetch users. Please try again later.' });
+      return res.status(403).json({ message: 'Session expired. Please log in again' });
     }
 
-    // General server error
-    return res.status(500).json({ message: 'Sorry, there was an error...' });
+    return res.status(500).json({ message: 'Internal server error. Please try again later' });
   }
 });
+
+// Utility function to mask email
+function maskEmail(email) {
+  const [localPart, domain] = email.split('@');
+  const visiblePart = localPart.slice(-4); // Keep last 4 characters of local part visible
+  return `***${visiblePart}@${domain}`;
+}
 
 module.exports = router;
