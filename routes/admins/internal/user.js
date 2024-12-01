@@ -39,7 +39,7 @@ router.get('/users', async (req, res) => {
   const token = req.headers['authorization'] || req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ error: 'A: Unauthorized' });
   }
 
   try {
@@ -47,7 +47,7 @@ router.get('/users', async (req, res) => {
 
     const myUser = await User.findOne({ id: decodedToken.id });
     if (!myUser) {
-      return res.status(401).json({ code: 0, message: 'Unauthorized' });
+      return res.status(401).json({ code: 0, message: 'B: Unauthorized' });
     }
 
     const isAdmin = myUser.id === process.env.ADMIN_ID || myUser.admin === true;
