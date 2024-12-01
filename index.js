@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const baseRouter = require("./routes/base-router");
-const { baseMiddleware, notFoundHandler } = require("./middlewares/base-middleware");
+const { authMiddleware, notFoundHandler } = require("./middlewares/base-middleware");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
@@ -16,7 +16,7 @@ app.use(
 );
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.json());
-app.use(baseMiddleware);
+app.use(authMiddleware);
 app.use("/", baseRouter);
 app.use(notFoundHandler);
 

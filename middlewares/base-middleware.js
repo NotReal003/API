@@ -123,9 +123,9 @@ const authMiddleware = async (req, res, next) => {
 };
 
 const notFoundHandler = (req, res) => {
-  logRouteUsage(req.path, req.method, 'Not Found', 0xe74c3c);
-  res.status(404).json({ message: 'Not Found' });
-}
+  logRouteUsage(req.path, req.method, "Not Found", 0xe74c3c);
+  res.status(404).json({ message: "Not Found" });
+};
 
 const logRouteUsage = (path, method, user, color) => {
   const message = {
