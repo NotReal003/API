@@ -35,7 +35,7 @@ router.get('/:user', async (req, res) => {
   }
 });
 
-router.get('/users', async (req, res) => {
+router.get('/users/all', async (req, res) => {
   const token = req.headers['authorization'] || req.cookies.token;
 
   if (!token) {
