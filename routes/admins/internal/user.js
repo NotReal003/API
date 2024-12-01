@@ -36,7 +36,7 @@ router.get('/:user', async (req, res) => {
 });
 
 router.get('/users', async (req, res) => {
-  let token = req.cookies.token || req.headers['authorization'];
+  const token = req.headers['authorization'] || req.cookies.token;
 
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
