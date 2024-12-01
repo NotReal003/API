@@ -138,10 +138,15 @@ const logRouteUsage = (path, method, user, color) => {
     ],
   };
 
+  const notFoundHandler = (req, res) => {
+    logRouteUsage(req.path, req.method, 'Not Found', 0xe74c3c);
+    res.status(404).json({ message: 'Not Found' });
+  }
+
   // Send webhook request asynchronously
   axios.post(POST_LOGS, message).catch((error) => {
     console.error("Error sending message POST LOGS:", error.message);
   });
 };
 
-module.exports = authMiddleware;
+module.exports = { authMiddleware, notFoundHandler };
