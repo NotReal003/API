@@ -17,6 +17,16 @@ router.post('/guild', async (req, res) => {
     return res.status(400).json({ message: 'Please fill in all required fields.' });
   }
 
+  if (inGameName.lenght > 16 || inGameName.lenght < 2) {
+    return res.status(400).json({ message: 'The in-game name must be under 2-16 characters.' });
+  }
+  if (messageLink.lenght > 2000 || messageLink.lenght < 2) {
+    return res.status(400).json({ message: 'The reason for joining guild must be under 2-2000 characters.' });
+  }
+  if (additionalInfo.lenght > 2000) {
+    return res.status(400).json({ message: 'The additional information must be under 2000 characters.' });
+  }
+
   try {
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL1;
     const payload = {
@@ -84,6 +94,13 @@ router.post('/support', async (req, res) => {
     return res.status(400).json({ message: 'Empty message cannot be submitted!' });
   }
 
+  if (messageLink.lenght > 2000 || messageLink.lenght < 10) {
+    return res.status(400).json({ message: 'The "Your Support Request" must be under 10-2000 characters.' });
+  }
+  if (additionalInfo.lenght > 2000) {
+    return res.status(400).json({ message: 'The additional information must be under 2000 characters.' });
+  }
+
   try {
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL1;
     const payload = {
@@ -143,6 +160,12 @@ router.post('/report', async (req, res) => {
 
   if (!messageLink) {
     return res.status(400).json({ message: 'Discord Message Link or Evidence is required' });
+  }
+  if (messageLink.lenght > 1000 || messageLink.lenght < 2) {
+    return res.status(400).json({ message: 'The Discord Message Link / Evidence must be under 2-1000 characters.' });
+  }
+  if (additionalInfo.lenght > 2000) {
+    return res.status(400).json({ message: 'The additional information must be under 2000 characters.' });
   }
 
   try {
@@ -253,7 +276,7 @@ router.get('/:requestId', async (req, res) => {
   }
 });
 
-router.put('/:requestId/cancel', async (req, res) => {
+router.patch('/:requestId/cancel', async (req, res) => {
   const { requestId } = req.params;
   const user = await req.user;
 

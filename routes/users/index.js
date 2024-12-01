@@ -82,7 +82,7 @@ router.get('/@me', async (req, res) => {
   }
 });
 
-router.put('/display', async (req, res) => {
+router.patch('/display', async (req, res) => {
   const { displayName } = req.body;
 
   if (!displayName || displayName.trim() === '') {
