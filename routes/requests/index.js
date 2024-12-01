@@ -17,7 +17,7 @@ router.post('/guild', async (req, res) => {
     return res.status(400).json({ message: 'Please fill in all required fields.' });
   }
 
-  if (inGameName.length < 16 || inGameName.length > 2) {
+  if (inGameName.length > 16 || inGameName.length < 2) {
     return res.status(400).json({ message: 'The in-game name must be under 2-16 characters.' });
   }
   if (messageLink.length > 2000 || messageLink.length < 2) {
