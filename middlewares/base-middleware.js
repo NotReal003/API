@@ -5,6 +5,7 @@ const Server = require('../models/Server');
 const User = require('../models/User');
 const Buser = require('../models/Buser');
 const Blacklist = require('../models/Blacklist');
+const Count = require('../models/Count');
 
 const POST_LOGS = process.env.WEB_LOGS;
 
@@ -141,15 +142,31 @@ const logRouteUsage = (path, method, user, color) => {
           { name: "Method:", value: method, inline: true },
           { name: "Accessed By:", value: user, inline: true },
         ],
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       },
     ],
   };
 
-  // Send webhook request asynchronously
+  // Fire-and-forget logging to Discord webhook
   axios.post(POST_LOGS, message).catch((error) => {
     console.error("Error sending message POST LOGS:", error.message);
   });
+
+  (async () => {
+    try {
+      const pageType = 'api';
+      let countRecord = await Count.findOne({ pageType });
+
+      if (!countRecord) {
+        countRecord = new Count({ visits: 0, pageType });
+      }
+
+      countRecord.visits += 1;
+      await countRecord.save();
+    } catch (error) {
+      console.error("Error tracking visits:", error.message);
+    }
+  })();
 };
 
 module.exports = { authMiddleware, notFoundHandler };

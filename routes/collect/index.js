@@ -3,12 +3,12 @@ const Count = require('../../models/Count');
 const router = express.Router();
 
 // Allowed page types
-const allowedPageTypes = ['request', 'pay', 'social'];
+const allowedPageTypes = ['request', 'pay', 'social', 'api'];
 
 // Route to count and increment visits for specific pages
 
-router.get('/visits', async (req, res) => {
-  const { pageType } = req.query;
+router.get('/visits/:pageType', async (req, res) => {
+  const { pageType } = req.params;
   const user = await req.user;
 
   if (!user) {
