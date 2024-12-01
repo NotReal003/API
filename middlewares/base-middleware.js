@@ -35,7 +35,6 @@ const authMiddleware = async (req, res, next) => {
 
   const serverPaths = [
     '/server/manage-api',
-    '/server/manage-api/users/all',
     ];
 
   if (ignorePaths.includes(req.path)) {
