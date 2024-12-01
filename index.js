@@ -16,7 +16,7 @@ app.use(
 );
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.json())
-//app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(authMiddleware);
 app.use("/", baseRouter);
 app.use(notFoundHandler);
