@@ -28,13 +28,16 @@ const authMiddleware = async (req, res, next) => {
     '/code',
   ];
 
+  const ignorePaths = [
+    '/health',
+    ];
+
   const serverPaths = [
     '/server/manage-api',
     '/server/manage-api/users/all',
     ];
 
-  // Ignore `/health` route
-  if (req.path === '/health') {
+  if (ignorePaths.includes(req.path)) {
     return next();
   }
 
