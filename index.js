@@ -25,10 +25,6 @@ app.get("/code", (req, res) => {
   res.redirect('https://github.com/NotReal003/API');
 });
 
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
-});
-
 const PORT = process.env.PORT || 3001;
 
 if (!process.env.MONGODB_URI) {
