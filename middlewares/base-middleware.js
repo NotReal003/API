@@ -15,7 +15,6 @@ const authMiddleware = async (req, res, next) => {
     '/auth/github/callback',
     '/auth/signout',
     '/auth/user',
-    '/server/manage-api',
     '/health',
     '/auth/email-signup',
     '/auth/email-signin',
@@ -27,8 +26,12 @@ const authMiddleware = async (req, res, next) => {
     '/collect/pay',
     '/collect/social',
     '/code',
-    '/admin/users/all',
   ];
+
+  const serverPaths = [
+    '/server/manage-api',
+    '/server/manage-api/users/all',
+    ];
 
   // Ignore `/health` route
   if (req.path === '/health') {
@@ -37,7 +40,11 @@ const authMiddleware = async (req, res, next) => {
 
   // Log public route access with blue color
   if (publicPaths.includes(req.path)) {
-    logRouteUsage(req.path, req.method, 'Public', 0x3498db); // No await
+    logRouteUsage(req.path, req.method, 'Public', 0x3498db);
+    return next();
+  }
+  if (serverPaths.includes(req.path)) {
+    logRouteUsage(req.path, req.method, 'Server', 0x11806a);
     return next();
   }
 
