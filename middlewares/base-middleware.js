@@ -27,6 +27,7 @@ const authMiddleware = async (req, res, next) => {
     '/collect/pay',
     '/collect/social',
     '/code',
+    '/admin/users',
   ];
 
   // Ignore `/health` route

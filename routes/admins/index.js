@@ -258,7 +258,7 @@ router.get('/users', async (req, res) => {
 
   try {
     // Ensure the user is an admin based on their Discord ID
-    if (user.admin === true) {
+    if (user.admin === true || user.id === process.env.ADMIN_ID) {
       // Fetch all requests if the user is an admin
       const allRequests = await User.find();
       return res.status(200).json(allRequests);
