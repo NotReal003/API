@@ -25,7 +25,7 @@ router.get('/manage/user/:user', async (req, res) => {
   }
 
   try {
-    const request = await User.find();
+    const request = await User.find({ id: req.params.user });
 
     if (!request) {
       return res.status(404).json({ message: 'User not found' });
