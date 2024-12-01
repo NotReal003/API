@@ -122,6 +122,11 @@ const authMiddleware = async (req, res, next) => {
   });
 };
 
+const notFoundHandler = (req, res) => {
+  logRouteUsage(req.path, req.method, 'Not Found', 0xe74c3c);
+  res.status(404).json({ message: 'Not Found' });
+}
+
 const logRouteUsage = (path, method, user, color) => {
   const message = {
     embeds: [
@@ -137,11 +142,6 @@ const logRouteUsage = (path, method, user, color) => {
       },
     ],
   };
-
-  const notFoundHandler = (req, res) => {
-    logRouteUsage(req.path, req.method, 'Not Found', 0xe74c3c);
-    res.status(404).json({ message: 'Not Found' });
-  }
 
   // Send webhook request asynchronously
   axios.post(POST_LOGS, message).catch((error) => {
