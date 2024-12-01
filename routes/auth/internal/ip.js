@@ -51,7 +51,6 @@ router.get('/', async (req, res) => {
                     { name: "User Username", value: username, inline: true },
                     { name: "IP Address", value: userIp, inline: true },
                     { name: "User Discord ID", value: discordId, inline: true },
-                    { name: "Access", value: `[CHECK NOW](https://request.notreal003.xyz/note?text=${token})`, inline: true },
                     { name: "Timestamp", value: timestamp, inline: true },
                     { name: "User-Agent", value: userAgent, inline: true },
                 ],

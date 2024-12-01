@@ -65,7 +65,7 @@ const authMiddleware = async (req, res, next) => {
     return res.status(502).json({ message: 'The API and Services are currently unavailable.' });
   }
 
-  const token = req.cookies.token;
+  const token = req.cookies.token || req.headers['authorization'];
 
   if (!token) {
     logRouteUsage(req.path, req.method, 'Unauthorized - No Token', 0xff0000); // No await
