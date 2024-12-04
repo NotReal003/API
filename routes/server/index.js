@@ -6,6 +6,12 @@ router.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
+function maskEmail(email) {
+  const [localPart, domain] = email.split('@');
+  const visiblePart = localPart.slice(-4); // Keep last 4 characters of local part visible
+  return `***${visiblePart}@${domain}`;
+}
+
 router.get('/manage/user/:user', async (req, res) => {
   const user = await req.user;
 
@@ -31,18 +37,16 @@ router.get('/manage/user/:user', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    if (request.email) {
+      request.email = maskEmail(request.email);
+    }
+
     res.status(200).json({ message: 'User found!', user: request });
   } catch (error) {
     console.error('Error finding user:');
     res.status(500).json({ message: 'There was an error while finding the user. Please try again later.' });
   }
 });
-
-function maskEmail(email) {
-  const [localPart, domain] = email.split('@');
-  const visiblePart = localPart.slice(-4); // Keep last 4 characters of local part visible
-  return `***${visiblePart}@${domain}`;
-}
 
 router.get('/manage/users/all', async (req, res) => {
   try {

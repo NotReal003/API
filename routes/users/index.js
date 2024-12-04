@@ -6,7 +6,7 @@ const Buser = require('../../models/Buser');
 
 function maskEmail(email) {
   const [localPart, domain] = email.split('@');
-  const visiblePart = localPart.slice(-3); // Keep last 4 characters of local part visible
+  const visiblePart = localPart.slice(-4);
   return `***${visiblePart}@${domain}`;
 }
 // GET: api.notreal003.xyz/auth/@me
@@ -46,10 +46,8 @@ router.get('/@me', async (req, res) => {
     if (!user.accessToken) {
       return res.status(401).json({ message: 'U 401: Unauthorized' });
     }
-    // Define the Discord API endpoint to get the user's details
     const discordApiUrl = 'https://discord.com/api/v10/users/@me';
 
-    // Make a request to the Discord API to get the user details
     let discordData;
     try {
       const response = await axios.get(discordApiUrl, {
@@ -62,7 +60,6 @@ router.get('/@me', async (req, res) => {
       return res.status(403).json({ code: 1, message: `Discord API Error: ${error.message}`});
     }
 
-    // Extract necessary fields from the Discord response
     const discordUserData = {
       id: discordData.id,
       username: discordData.username,
@@ -71,7 +68,6 @@ router.get('/@me', async (req, res) => {
 
     const userEmail = maskEmail(user.email);
 
-    // Return the combined user data from both the database and Discord
     res.json({
       id: discordUserData.id,
       username: discordUserData.username,
