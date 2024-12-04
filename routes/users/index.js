@@ -4,6 +4,11 @@ const router = express.Router();
 const User = require('../../models/User');
 const Buser = require('../../models/Buser');
 
+function maskEmail(email) {
+  const [localPart, domain] = email.split('@');
+  const visiblePart = localPart.slice(-3); // Keep last 4 characters of local part visible
+  return `***${visiblePart}@${domain}`;
+}
 // GET: api.notreal003.xyz/auth/@me
 router.get('/@me', async (req, res) => {
   try {
@@ -64,12 +69,14 @@ router.get('/@me', async (req, res) => {
       avatar: discordData.avatar
     };
 
+    const userEmail = maskEmail(user.email);
+
     // Return the combined user data from both the database and Discord
     res.json({
       id: discordUserData.id,
       username: discordUserData.username,
       avatarHash: discordUserData.avatar,
-      email: user.email,
+      email: userEmail,
       displayName: user.displayName,
       joinedAt: user.joinedAt,
       authType: user.authType,
