@@ -157,12 +157,13 @@ router.get('/:pageType', async (req, res) => {
     });
     await visitLog.save();
 
-    res.status(200).json({ success: true, message: 'Visit tracked successfully.' });
+    res.status(200).json({ success: true, message: 'OK' });
   } catch (error) {
     console.error('Error tracking visit:', error);
     res.status(500).json({
       success: false,
       message: 'Error tracking visit.',
+      error: error.message,
     });
   }
 });
