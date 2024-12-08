@@ -103,29 +103,29 @@ router.get('/track/:pageType', async (req, res) => {
     const browserName = /chrome/i.test(userAgent) ? 'Chrome' : /firefox/i.test(userAgent) ? 'Firefox' : 'Unknown';
 
     const location = {
-      country: 'Unknown', // replace with a country lookup API
+      country: 'Unknown',
       city: 'Unknown',
     };
 
-    // Find or create Count record
+    //
     let countRecord = await Count.findOne({ pageType });
     if (!countRecord) {
       countRecord = new Count({ pageType });
     }
 
-    // Increment stats
+    //
     countRecord.visits += 1;
     countRecord.deviceStats[deviceType] = (countRecord.deviceStats[deviceType] || 0) + 1;
     countRecord.browserStats[browserName] = (countRecord.browserStats[browserName] || 0) + 1;
     countRecord.referrerStats[referrer] = (countRecord.referrerStats[referrer] || 0) + 1;
 
-    // Track daily stats
+    //
     const date = formatDate(timestamp);
     countRecord.dailyVisits.set(date, (countRecord.dailyVisits.get(date) || 0) + 1);
 
     await countRecord.save();
 
-    // Log the visit
+    //
     const visitLog = new VisitLog({
       pageType,
       ip,
