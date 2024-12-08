@@ -9,14 +9,13 @@ const allowedPageTypes = ['request', 'pay', 'social', 'api'];
 // Route to count and increment visits for specific pages
 
 router.get('/visits', async (req, res) => {
-
   const user = await req.user;
 
   if (!user) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  // check if user is Admin
+  let isAdmin = false;
   if (user.admin === true || user.id === process.env.ADMIN_ID) {
     isAdmin = true;
   }
@@ -24,10 +23,10 @@ router.get('/visits', async (req, res) => {
   if (!isAdmin) {
     return res.status(403).json({ message: 'You cannot view this page' });
   }
-  
+
   try {
     const counts = await Count.find({});
-    const visitLogs = await VisitLog.find({});
+    const visitLogs = await VisitLog.find({}).sort({ visitTime: -1 });
 
     const totalVisits = counts.reduce((sum, record) => sum + record.visits, 0);
     const uniqueVisitors = counts.reduce((sum, record) => sum + record.uniqueVisitors, 0);
@@ -39,7 +38,6 @@ router.get('/visits', async (req, res) => {
       return map;
     }, {});
 
-    // Device usage stats
     const deviceStats = counts.reduce((map, record) => {
       for (const [device, count] of Object.entries(record.deviceStats)) {
         map[device] = (map[device] || 0) + count;
@@ -61,6 +59,25 @@ router.get('/visits', async (req, res) => {
       return map;
     }, {});
 
+    // Insights from VisitLog
+    const recentVisits = visitLogs.slice(0, 10).map(log => ({
+      ipAddress: log.ipAddress,
+      visitTime: log.visitTime,
+      referrer: log.referrer,
+      device: log.device,
+      browser: log.browser,
+    }));
+
+    const frequentVisitors = visitLogs.reduce((map, log) => {
+      map[log.ipAddress] = (map[log.ipAddress] || 0) + 1;
+      return map;
+    }, {});
+
+    const topVisitors = Object.entries(frequentVisitors)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([ip, count]) => ({ ipAddress: ip, visitCount: count }));
+
     // Response
     res.status(200).json({
       success: true,
@@ -70,6 +87,8 @@ router.get('/visits', async (req, res) => {
       deviceStats,
       browserStats,
       dailyTrends,
+      recentVisits,
+      topVisitors,
     });
   } catch (error) {
     console.error('Error fetching analytics:', error);
@@ -82,7 +101,8 @@ router.get('/visits', async (req, res) => {
 });
 
 
-router.get('/track/:pageType', async (req, res) => {
+
+router.get('/:pageType', async (req, res) => {
   const { pageType } = req.params;
 
   if (!allowedPageTypes.includes(pageType)) {
