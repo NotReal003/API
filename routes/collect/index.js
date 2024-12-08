@@ -1,117 +1,28 @@
 const express = require('express');
 const Count = require('../../models/Count');
 const router = express.Router();
-const VisitLog = require('../../models/VisitLog');
 
-// Allowed page types
-const allowedPageTypes = ['request', 'pay', 'social'];
+// Helper function to get visit count for a specific time range
+const getVisitCountForRange = (timestamps, range) => {
+  const now = new Date();
+  const rangeStart = new Date();
+  if (range === 'daily') {
+    rangeStart.setDate(now.getDate() - 1); // 1 day ago
+  } else if (range === 'weekly') {
+    rangeStart.setDate(now.getDate() - 7); // 1 week ago
+  } else if (range === 'monthly') {
+    rangeStart.setMonth(now.getMonth() - 1); // 1 month ago
+  }
 
-// Route to count and increment visits for specific pages
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`; 
+  return timestamps.filter(timestamp => timestamp >= rangeStart).length;
 };
 
+const allowedPageTypes = ['request', 'pay', 'social'];
 
-router.get('/visits', async (req, res) => {
-  const user = await req.user;
-
-  if (!user) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
-  let isAdmin = false;
-  if (user.admin === true || user.id === process.env.ADMIN_ID) {
-    isAdmin = true;
-  }
-
-  if (!isAdmin) {
-    return res.status(403).json({ message: 'You cannot view this page' });
-  }
-
-  try {
-    const counts = await Count.find({});
-    const visitLogs = await VisitLog.find({}).sort({ visitTime: -1 });
-
-    const totalVisits = counts.reduce((sum, record) => sum + record.visits, 0);
-    const uniqueVisitors = counts.reduce((sum, record) => sum + record.uniqueVisitors, 0);
-
-    const referrerStats = counts.reduce((map, record) => {
-      for (const [referrer, count] of Object.entries(record.referrerStats)) {
-        map[referrer] = (map[referrer] || 0) + count;
-      }
-      return map;
-    }, {});
-
-    const deviceStats = counts.reduce((map, record) => {
-      for (const [device, count] of Object.entries(record.deviceStats)) {
-        map[device] = (map[device] || 0) + count;
-      }
-      return map;
-    }, {});
-
-    const browserStats = counts.reduce((map, record) => {
-      for (const [browser, count] of Object.entries(record.browserStats)) {
-        map[browser] = (map[browser] || 0) + count;
-      }
-      return map;
-    }, {});
-
-    const dailyTrends = counts.reduce((map, record) => {
-      for (const [date, count] of Object.entries(record.dailyVisits)) {
-        map[date] = (map[date] || 0) + count;
-      }
-      return map;
-    }, {});
-
-    // Insights from VisitLog
-    const recentVisits = visitLogs.slice(0, 10).map(log => ({
-      ipAddress: log.ipAddress,
-      visitTime: log.visitTime,
-      referrer: log.referrer,
-      device: log.device,
-      browser: log.browser,
-    }));
-
-    const frequentVisitors = visitLogs.reduce((map, log) => {
-      map[log.ipAddress] = (map[log.ipAddress] || 0) + 1;
-      return map;
-    }, {});
-
-    const topVisitors = Object.entries(frequentVisitors)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([ip, count]) => ({ ipAddress: ip, visitCount: count }));
-
-    // Response
-    res.status(200).json({
-      success: true,
-      totalVisits,
-      uniqueVisitors,
-      referrerStats,
-      deviceStats,
-      browserStats,
-      dailyTrends,
-      recentVisits,
-      topVisitors,
-    });
-  } catch (error) {
-    console.error('Error fetching analytics:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching analytics.',
-      error: error.message,
-    });
-  }
-});
-
-
-
-router.get('/:pageType', async (req, res) => {
+router.post('/:pageType', async (req, res) => {
   const { pageType } = req.params;
+  const referrer = req.get('Referrer');
+  const visitTimestamp = new Date();
 
   if (!allowedPageTypes.includes(pageType)) {
     return res.status(400).json({
@@ -121,60 +32,87 @@ router.get('/:pageType', async (req, res) => {
   }
 
   try {
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const timestamp = new Date();
-    const referrer = req.headers.referer || 'Direct';
-    const userAgent = req.headers['user-agent'];
-
-    // Extract device and browser info
-    const deviceType = /mobile/i.test(userAgent) ? 'Mobile' : /tablet/i.test(userAgent) ? 'Tablet' : 'Desktop';
-    const browserName = /chrome/i.test(userAgent) ? 'Chrome' : /firefox/i.test(userAgent) ? 'Firefox' : 'Unknown';
-
-    const location = {
-      country: 'Unknown',
-      city: 'Unknown',
-    };
-
-    //
+    // Find or create a document for the pageType
     let countRecord = await Count.findOne({ pageType });
+
     if (!countRecord) {
-      countRecord = new Count({ pageType });
+      countRecord = new Count({
+        pageType,
+        visits: 0,
+        referrerStats: {},
+        dailyVisits: {},
+        weeklyVisits: {},
+        monthlyVisits: {},
+        visitTimestamps: [],
+      });
     }
 
-    //
+    // Increment the visit count for the page
     countRecord.visits += 1;
-    countRecord.deviceStats[deviceType] = (countRecord.deviceStats[deviceType] || 0) + 1;
-    countRecord.browserStats[browserName] = (countRecord.browserStats[browserName] || 0) + 1;
-    countRecord.referrerStats[referrer] = (countRecord.referrerStats[referrer] || 0) + 1;
+    countRecord.visitTimestamps.push(visitTimestamp);
 
-    //
-    const date = formatDate(timestamp);
-    countRecord.dailyVisits.set(date, (countRecord.dailyVisits.get(date) || 0) + 1);
+    // Track referrer stats
+    if (referrer) {
+      countRecord.referrerStats[referrer] = (countRecord.referrerStats[referrer] || 0) + 1;
+    }
+
+    // Update daily, weekly, and monthly visits
+    countRecord.dailyVisits[visitTimestamp.toISOString().slice(0, 10)] = getVisitCountForRange(countRecord.visitTimestamps, 'daily');
+    countRecord.weeklyVisits[visitTimestamp.toISOString().slice(0, 7)] = getVisitCountForRange(countRecord.visitTimestamps, 'weekly');
+    countRecord.monthlyVisits[visitTimestamp.toISOString().slice(0, 7)] = getVisitCountForRange(countRecord.visitTimestamps, 'monthly');
 
     await countRecord.save();
 
-    //
-    const visitLog = new VisitLog({
-      pageType,
-      ip,
-      timestamp,
-      referrer,
-      deviceType,
-      browserName,
-      location,
-    });
-    await visitLog.save();
-
-    res.status(200).json({ success: true, message: 'OK' });
+    res.status(200).json({ success: true, message: `Visit tracked for ${pageType}` });
   } catch (error) {
     console.error('Error tracking visit:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error tracking visit.',
-      error: error.message,
-    });
+    res.status(500).json({ success: false, message: 'Error tracking visit.' });
   }
 });
 
+router.get('/visits', async (req, res) => {
+
+  const user = await req.user;
+  if (!user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  if (user.admin !== true) {
+    return res.status(403).json({ message: 'You do not have permission to view this area.'});
+  }
+  
+  try {
+    const countRecords = await Count.find();
+
+    let pageStats = {};
+
+    countRecords.forEach((record) => {
+      if (record.pageType) {
+        if (!pageStats[record.pageType]) {
+          pageStats[record.pageType] = {
+            daily: [],
+            weekly: [],
+            monthly: [],
+          };
+        }
+
+        pageStats[record.pageType].daily = Object.entries(record.dailyVisits);
+        pageStats[record.pageType].weekly = Object.entries(record.weeklyVisits);
+        pageStats[record.pageType].monthly = Object.entries(record.monthlyVisits);
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      pageStats,
+    });
+  } catch (error) {
+    console.error('Error fetching visit data:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching visit data.',
+    });
+  }
+});
 
 module.exports = router;
