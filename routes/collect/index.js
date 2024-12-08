@@ -7,6 +7,14 @@ const VisitLog = require('../../models/VisitLog');
 const allowedPageTypes = ['request', 'pay', 'social', 'api'];
 
 // Route to count and increment visits for specific pages
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`; 
+};
+
 
 router.get('/visits', async (req, res) => {
   const user = await req.user;
