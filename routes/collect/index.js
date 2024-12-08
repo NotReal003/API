@@ -79,7 +79,6 @@ router.get('/visits', async (req, res) => {
   }
 });
 
-
 router.get('/:pageType', async (req, res) => {
   const { pageType } = req.params;
 
@@ -103,11 +102,12 @@ router.get('/:pageType', async (req, res) => {
       ? 'Firefox'
       : 'Other';
 
-    let countRecord = await Count.findOne({ pageType });
+    let countRecord = await Count.findOne({ pageType }).lean(); // Use .lean() to convert to plain JS object
     if (!countRecord) {
       countRecord = new Count({
         pageType,
         visits: 0,
+        uniqueVisitors: 0,
         deviceStats: {},
         browserStats: {},
         referrerStats: {},
@@ -127,7 +127,7 @@ router.get('/:pageType', async (req, res) => {
 
     const visitLog = new VisitLog({
       pageType,
-      ipAddress, // Fixed field name
+      ipAddress,
       timestamp,
       referrer,
       deviceType,
@@ -135,7 +135,24 @@ router.get('/:pageType', async (req, res) => {
     });
     await visitLog.save();
 
-    res.status(200).json({ success: true, message: 'Visit logged successfully.' });
+    // Clean up the response and return only necessary fields
+    const cleanedResponse = {
+      success: true,
+      totalVisits: countRecord.visits,
+      uniqueVisitors: countRecord.uniqueVisitors,
+      referrerStats: countRecord.referrerStats,
+      deviceStats: countRecord.deviceStats,
+      browserStats: countRecord.browserStats,
+      dailyTrends: countRecord.dailyVisits,
+      recentVisits: visitLog ? [visitLog] : [], // Example of recent visits
+      topVisitors: await VisitLog.aggregate([
+        { $group: { _id: '$ipAddress', visitCount: { $sum: 1 } } },
+        { $sort: { visitCount: -1 } },
+        { $limit: 5 },
+      ]),
+    };
+
+    res.status(200).json(cleanedResponse);
   } catch (error) {
     console.error('Error tracking visit:', error.message);
     res.status(500).json({
@@ -145,6 +162,5 @@ router.get('/:pageType', async (req, res) => {
     });
   }
 });
-
 
 module.exports = router;
