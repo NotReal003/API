@@ -19,7 +19,7 @@ const getVisitCountForRange = (timestamps, range) => {
 
 const allowedPageTypes = ['request', 'pay', 'social'];
 
-router.post('/:pageType', async (req, res) => {
+router.get('/:pageType', async (req, res) => {
   const { pageType } = req.params;
   const referrer = req.get('Referrer');
   const visitTimestamp = new Date();
