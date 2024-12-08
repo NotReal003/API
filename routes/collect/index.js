@@ -91,12 +91,11 @@ router.get('/:pageType', async (req, res) => {
   }
 
   try {
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'Unknown';
+    const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'Unknown';
     const timestamp = new Date();
     const referrer = req.headers.referer || 'Direct';
     const userAgent = req.headers['user-agent'] || 'Unknown';
 
-    // Simple device and browser detection
     const deviceType = /mobile/i.test(userAgent) ? 'Mobile' : /tablet/i.test(userAgent) ? 'Tablet' : 'Desktop';
     const browserName = /chrome/i.test(userAgent)
       ? 'Chrome'
@@ -104,7 +103,6 @@ router.get('/:pageType', async (req, res) => {
       ? 'Firefox'
       : 'Other';
 
-    // Find or create Count record
     let countRecord = await Count.findOne({ pageType });
     if (!countRecord) {
       countRecord = new Count({
@@ -117,22 +115,19 @@ router.get('/:pageType', async (req, res) => {
       });
     }
 
-    // Update stats
     countRecord.visits += 1;
     countRecord.deviceStats[deviceType] = (countRecord.deviceStats[deviceType] || 0) + 1;
     countRecord.browserStats[browserName] = (countRecord.browserStats[browserName] || 0) + 1;
     countRecord.referrerStats[referrer] = (countRecord.referrerStats[referrer] || 0) + 1;
 
-    // Increment daily visit count
-    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0];
     countRecord.dailyVisits.set(today, (countRecord.dailyVisits.get(today) || 0) + 1);
 
     await countRecord.save();
 
-    // Save visit log
     const visitLog = new VisitLog({
       pageType,
-      ip,
+      ipAddress, // Fixed field name
       timestamp,
       referrer,
       deviceType,
@@ -150,5 +145,6 @@ router.get('/:pageType', async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;
