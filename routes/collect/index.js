@@ -70,49 +70,4 @@ router.get('/:pageType', async (req, res) => {
   }
 });
 
-router.get('/check', async (req, res) => {
-
-  const user = await req.user;
-  if (!user) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
-  if (user.admin !== true) {
-    return res.status(403).json({ message: 'You do not have permission to view this area.'});
-  }
-  
-  try {
-    const countRecords = await Count.find();
-
-    let pageStats = {};
-
-    countRecords.forEach((record) => {
-      if (record.pageType) {
-        if (!pageStats[record.pageType]) {
-          pageStats[record.pageType] = {
-            daily: [],
-            weekly: [],
-            monthly: [],
-          };
-        }
-
-        pageStats[record.pageType].daily = Object.entries(record.dailyVisits);
-        pageStats[record.pageType].weekly = Object.entries(record.weeklyVisits);
-        pageStats[record.pageType].monthly = Object.entries(record.monthlyVisits);
-      }
-    });
-
-    res.status(200).json({
-      success: true,
-      pageStats,
-    });
-  } catch (error) {
-    console.error('Error fetching visit data:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching visit data.',
-    });
-  }
-});
-
 module.exports = router;
