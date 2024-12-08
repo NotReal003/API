@@ -151,21 +151,21 @@ const logRouteUsage = (path, method, user, color) => {
     console.error("Error sending message POST LOGS:", error.message);
   });
 
-  (async () => {
-    try {
-      const pageType = 'api';
-      let countRecord = await Count.findOne({ pageType });
-
-      if (!countRecord) {
-        countRecord = new Count({ visits: 0, pageType });
-      }
-
-      countRecord.visits += 1;
-      await countRecord.save();
-    } catch (error) {
-      console.error("Error tracking visits:", error.message);
-    }
-  })();
+//  (async () => {
+//    try {
+//      const pageType = 'api';
+//      let countRecord = await Count.findOne({ pageType });
+//
+//      if (!countRecord) {
+//        countRecord = new Count({ visits: 0, pageType });
+//      }
+//
+//      countRecord.visits += 1;
+//      await countRecord.save();
+//    } catch (error) {
+//      console.error("Error tracking visits:", error.message);
+//    }
+//  })();
 };
 
 module.exports = { authMiddleware, notFoundHandler };

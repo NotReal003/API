@@ -4,7 +4,7 @@ const router = express.Router();
 const VisitLog = require('../../models/VisitLog');
 
 // Allowed page types
-const allowedPageTypes = ['request', 'pay', 'social', 'api'];
+const allowedPageTypes = ['request', 'pay', 'social'];
 
 // Route to count and increment visits for specific pages
 const formatDate = (timestamp) => {
