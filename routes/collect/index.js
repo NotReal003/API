@@ -6,74 +6,74 @@ const VisitLog = require('../../models/VisitLog');
 // Allowed page types
 const allowedPageTypes = ['request', 'pay', 'social'];
 
-// Route to count and increment visits for specific pages
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`; 
-};
-
 
 router.get('/visits', async (req, res) => {
+  const user = await req.user;
+
+  if (!user) {
+    return res.status(401);
+  }
+  
+  if (user.admin !== true) {
+    return res.status(403);
+  }
   try {
-    const counts = await Count.find({});
-    const visitLogs = await VisitLog.find({}).sort({ visitTime: -1 });
+    // Fetch all count records from the database
+    const countRecords = await Count.find();
 
-    const totalVisits = counts.reduce((sum, record) => sum + record.visits, 0);
-    const uniqueVisitors = counts.reduce((sum, record) => sum + record.uniqueVisitors, 0);
+    // Initialize variables for total stats
+    let totalVisits = 0;
+    let uniqueVisitors = 0;
+    const pageStats = {};
+    const deviceStats = {};
+    const browserStats = {};
+    const referrerStats = {};
 
-    const referrerStats = Object.fromEntries(
-      counts.flatMap(record => Object.entries(record.referrerStats || {}))
-    );
+    // Loop through all count records to aggregate data
+    for (const record of countRecords) {
+      totalVisits += record.visits;
 
-    const deviceStats = Object.fromEntries(
-      counts.flatMap(record => Object.entries(record.deviceStats || {}))
-    );
+      // Aggregating page-type stats
+      pageStats[record.pageType] = pageStats[record.pageType] || 0;
+      pageStats[record.pageType] += record.visits;
 
-    const browserStats = Object.fromEntries(
-      counts.flatMap(record => Object.entries(record.browserStats || {}))
-    );
+      // Aggregating device stats
+      for (const [device, count] of Object.entries(record.deviceStats)) {
+        deviceStats[device] = (deviceStats[device] || 0) + count;
+      }
 
-    const dailyTrends = Object.fromEntries(
-      counts.flatMap(record => Object.entries(record.dailyVisits || {}))
-    );
+      // Aggregating browser stats
+      for (const [browser, count] of Object.entries(record.browserStats)) {
+        browserStats[browser] = (browserStats[browser] || 0) + count;
+      }
 
-    const recentVisits = visitLogs.slice(0, 10).map(log => ({
-      ipAddress: log.ipAddress,
-      visitTime: log.visitTime,
-      referrer: log.referrer,
-      device: log.device,
-      browser: log.browser,
-    }));
+      // Aggregating referrer stats
+      for (const [referrer, count] of Object.entries(record.referrerStats)) {
+        referrerStats[referrer] = (referrerStats[referrer] || 0) + count;
+      }
 
-    const frequentVisitors = visitLogs.reduce((map, log) => {
-      map[log.ipAddress] = (map[log.ipAddress] || 0) + 1;
-      return map;
-    }, {});
+      // Assuming unique visitors are tracked by IP (basic example)
+      uniqueVisitors += Object.keys(record.referrerStats).length; // Approximation
+    }
 
-    const topVisitors = Object.entries(frequentVisitors)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([ip, count]) => ({ ipAddress: ip, visitCount: count }));
-
-    res.status(200).json({
+    // Prepare the response object
+    const response = {
       success: true,
       totalVisits,
       uniqueVisitors,
-      referrerStats,
+      pageStats,
       deviceStats,
       browserStats,
-      dailyTrends,
-      recentVisits,
-      topVisitors,
-    });
+      referrerStats,
+    };
+
+    res.status(200).json(response);
+
   } catch (error) {
-    console.error('Error fetching analytics:', error);
+    console.error('Error fetching visit data:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching analytics.',
+      message: 'Error fetching visit data.',
       error: error.message,
     });
   }
@@ -82,6 +82,7 @@ router.get('/visits', async (req, res) => {
 router.get('/:pageType', async (req, res) => {
   const { pageType } = req.params;
 
+  // Validate pageType
   if (!allowedPageTypes.includes(pageType)) {
     return res.status(400).json({
       success: false,
@@ -102,7 +103,8 @@ router.get('/:pageType', async (req, res) => {
       ? 'Firefox'
       : 'Other';
 
-    let countRecord = await Count.findOne({ pageType }).lean(); // Use .lean() to convert to plain JS object
+    // Fetch or create count record for the specific page type
+    let countRecord = await Count.findOne({ pageType });
     if (!countRecord) {
       countRecord = new Count({
         pageType,
@@ -115,27 +117,20 @@ router.get('/:pageType', async (req, res) => {
       });
     }
 
+    // Increment visit counters
     countRecord.visits += 1;
     countRecord.deviceStats[deviceType] = (countRecord.deviceStats[deviceType] || 0) + 1;
     countRecord.browserStats[browserName] = (countRecord.browserStats[browserName] || 0) + 1;
     countRecord.referrerStats[referrer] = (countRecord.referrerStats[referrer] || 0) + 1;
 
+    // Update daily visits (in a Map, keyed by date)
     const today = new Date().toISOString().split('T')[0];
     countRecord.dailyVisits.set(today, (countRecord.dailyVisits.get(today) || 0) + 1);
 
+    // Save the updated count record
     await countRecord.save();
 
-    const visitLog = new VisitLog({
-      pageType,
-      ipAddress,
-      timestamp,
-      referrer,
-      deviceType,
-      browserName,
-    });
-    await visitLog.save();
-
-    // Clean up the response and return only necessary fields
+    // Prepare cleaned response data
     const cleanedResponse = {
       success: true,
       totalVisits: countRecord.visits,
@@ -143,16 +138,16 @@ router.get('/:pageType', async (req, res) => {
       referrerStats: countRecord.referrerStats,
       deviceStats: countRecord.deviceStats,
       browserStats: countRecord.browserStats,
-      dailyTrends: countRecord.dailyVisits,
-      recentVisits: visitLog ? [visitLog] : [], // Example of recent visits
-      topVisitors: await VisitLog.aggregate([
-        { $group: { _id: '$ipAddress', visitCount: { $sum: 1 } } },
-        { $sort: { visitCount: -1 } },
-        { $limit: 5 },
-      ]),
+      dailyTrends: Array.from(countRecord.dailyVisits.entries()).map(([date, count]) => ({
+        date,
+        visits: count,
+      })),
+      topVisitors: [], // You can aggregate this from the referrerStats or deviceStats if needed
     };
 
+    // Send the response
     res.status(200).json(cleanedResponse);
+
   } catch (error) {
     console.error('Error tracking visit:', error.message);
     res.status(500).json({
