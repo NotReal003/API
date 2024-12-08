@@ -70,7 +70,7 @@ router.get('/:pageType', async (req, res) => {
   }
 });
 
-router.get('/visits', async (req, res) => {
+router.get('/check', async (req, res) => {
 
   const user = await req.user;
   if (!user) {
