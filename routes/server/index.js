@@ -14,37 +14,31 @@ function maskEmail(email) {
 }
 
 router.get('/visits', async (req, res) => {
-
-  const user = await req.user;
-  if (!user) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
-  if (user.admin !== true) {
-    return res.status(403).json({ message: 'You do not have permission to view this area.'});
-  }
-
   try {
+    // Check if the user is authenticated
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    // Check if the user has admin privileges
+    if (!user.admin) {
+      return res.status(403).json({ message: 'You do not have permission to view this area.' });
+    }
+
+    // Fetch all count records
     const countRecords = await Count.find();
 
-    let pageStats = {};
+    // Transform the data into a simpler format
+    const pageStats = countRecords.map((record) => ({
+      pageType: record.pageType,
+      totalVisits: record.totalVisits,
+      dailyVisits: Array.from(record.dailyVisits.entries()), // Convert Map to array
+      weeklyVisits: record.weeklyVisits,
+      monthlyVisits: record.monthlyVisits,
+    }));
 
-    countRecords.forEach((record) => {
-      if (record.pageType) {
-        if (!pageStats[record.pageType]) {
-          pageStats[record.pageType] = {
-            daily: [],
-            weekly: [],
-            monthly: [],
-          };
-        }
-
-        pageStats[record.pageType].daily = Object.entries(record.dailyVisits);
-        pageStats[record.pageType].weekly = Object.entries(record.weeklyVisits);
-        pageStats[record.pageType].monthly = Object.entries(record.monthlyVisits);
-      }
-    });
-
+    // Send the response
     res.status(200).json({
       success: true,
       pageStats,
@@ -57,6 +51,7 @@ router.get('/visits', async (req, res) => {
     });
   }
 });
+
 
 router.get('/manage/user/:user', async (req, res) => {
   const user = await req.user;

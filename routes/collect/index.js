@@ -2,17 +2,10 @@ const express = require('express');
 const Count = require('../../models/Count');
 const router = express.Router();
 
-// Helper function to get visit count for a specific time range
-const getVisitCountForRange = (timestamps, rangeStart) => {
-  return timestamps.filter(timestamp => new Date(timestamp) >= rangeStart).length;
-};
-
 const allowedPageTypes = ['request', 'pay', 'social'];
 
 router.get('/:pageType', async (req, res) => {
   const { pageType } = req.params;
-  const referrer = req.get('Referrer');
-  const visitTimestamp = new Date();
 
   if (!allowedPageTypes.includes(pageType)) {
     return res.status(400).json({
@@ -21,6 +14,8 @@ router.get('/:pageType', async (req, res) => {
     });
   }
 
+  const today = new Date().toISOString().split('T')[0]; // Get today's date (YYYY-MM-DD)
+
   try {
     // Find or create a document for the pageType
     let countRecord = await Count.findOne({ pageType });
@@ -28,47 +23,47 @@ router.get('/:pageType', async (req, res) => {
     if (!countRecord) {
       countRecord = new Count({
         pageType,
-        visits: 0,
-        referrerStats: {},
+        totalVisits: 0,
         dailyVisits: {},
-        weeklyVisits: {},
-        monthlyVisits: {},
-        visitTimestamps: [],
+        weeklyVisits: 0,
+        monthlyVisits: 0,
       });
     }
 
-    // Increment the visit count for the page
-    countRecord.visits += 1;
-    countRecord.visitTimestamps.push(visitTimestamp);
+    // Update total visits
+    countRecord.totalVisits += 1;
 
-    // Track referrer stats
-    if (referrer) {
-      countRecord.referrerStats[referrer] = (countRecord.referrerStats[referrer] || 0) + 1;
-    }
+    // Update daily visits
+    countRecord.dailyVisits.set(today, (countRecord.dailyVisits.get(today) || 0) + 1);
 
-    // Define time ranges
-    const now = new Date();
-    const dailyKey = visitTimestamp.toISOString().slice(0, 10); // YYYY-MM-DD
-    const weeklyKey = `${now.getFullYear()}-W${Math.ceil(
-      (now.getDate() - now.getDay() + 7) / 7
-    )}`; // YYYY-WXX
-    const monthlyKey = visitTimestamp.toISOString().slice(0, 7); // YYYY-MM
+    // Update weekly and monthly visits
+    const last7Days = Array.from(countRecord.dailyVisits.entries())
+      .filter(([date]) => new Date(date) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))
+      .reduce((sum, [, count]) => sum + count, 0);
 
-    // Update visit counts for ranges
-    const dailyStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-    const weeklyStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-    const monthlyStart = new Date(now.getFullYear(), now.getMonth() - 1);
+    const last30Days = Array.from(countRecord.dailyVisits.entries())
+      .filter(([date]) => new Date(date) >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+      .reduce((sum, [, count]) => sum + count, 0);
 
-    countRecord.dailyVisits[dailyKey] = getVisitCountForRange(countRecord.visitTimestamps, dailyStart);
-    countRecord.weeklyVisits[weeklyKey] = getVisitCountForRange(countRecord.visitTimestamps, weeklyStart);
-    countRecord.monthlyVisits[monthlyKey] = getVisitCountForRange(countRecord.visitTimestamps, monthlyStart);
+    countRecord.weeklyVisits = last7Days;
+    countRecord.monthlyVisits = last30Days;
 
     await countRecord.save();
 
-    res.status(200).json({ success: true, message: `Visit tracked for ${pageType}` });
+    res.status(200).json({ success: true, message: 'Visit tracked successfully.' });
   } catch (error) {
     console.error('Error tracking visit:', error);
     res.status(500).json({ success: false, message: 'Error tracking visit.' });
+  }
+});
+
+router.get('/', async (req, res) => {
+  try {
+    const counts = await Count.find();
+    res.status(200).json({ success: true, counts });
+  } catch (error) {
+    console.error('Error fetching analytics:', error);
+    res.status(500).json({ success: false, message: 'Error fetching analytics.' });
   }
 });
 
