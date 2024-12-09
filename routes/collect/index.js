@@ -57,14 +57,4 @@ router.get('/:pageType', async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
-  try {
-    const counts = await Count.find();
-    res.status(200).json({ success: true, counts });
-  } catch (error) {
-    console.error('Error fetching analytics:', error);
-    res.status(500).json({ success: false, message: 'Error fetching analytics.' });
-  }
-});
-
 module.exports = router;
