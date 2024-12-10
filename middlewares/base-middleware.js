@@ -49,18 +49,18 @@ const authMiddleware = async (req, res, next) => {
     return next();
   }
 
-  const requestId = '66ce114ad047465fb13c4464';
-  const myServer = await Server.findById(requestId);
+  //const requestId = '66ce114ad047465fb13c4464';
+  //const myServer = await Server.findById(requestId);
 
-  if (!myServer) {
-    logRouteUsage(req.path, req.method, 'Server Not Found', 0xff0000);
-    return res.status(404).json({ message: 'Server not found' });
-  }
+  //if (!myServer) {
+  //  logRouteUsage(req.path, req.method, 'Server Not Found', 0xff0000);
+  //  return res.status(404).json({ message: 'Server not found' });
+  //}
 
-  if (myServer.serverClosed === 'yesclosed') {
-    logRouteUsage(req.path, req.method, 'Server Closed', 0xff0000);
-    return res.status(502).json({ message: 'The API and Services are currently unavailable.' });
-  }
+  //if (myServer.serverClosed === 'yesclosed') {
+//    logRouteUsage(req.path, req.method, 'Server Closed', 0xff0000);
+//    return res.status(502).json({ message: 'The API and Services are currently unavailable.' });
+//  }
 
   const token = req.cookies.token || req.headers['authorization'];
 
