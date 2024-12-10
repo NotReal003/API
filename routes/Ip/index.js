@@ -2,6 +2,18 @@ const express = require('express');
 const router = express.Router();
 const BannedIP = require('../../models/BannedIp');
 
+// Get User IP
+
+router.get('/myIp', async (req, res) => {
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  if (ip) {
+    return res.status(200).json({ ip: ip });
+  }
+  else {
+    return res.status(400).json({ message: 'Failed to get IP address.' });
+  }
+});
+
 // Find all banned IPs
 router.get('/banned', async (req, res) => {
   
