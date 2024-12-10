@@ -76,25 +76,29 @@ const authMiddleware = async (req, res, next) => {
     logRouteUsage(req.path, req.method, 'Blacklisted Token', 0xff0000);
     return res.status(403).json({ message: 'Your session has expired. Please login again.' });
   }
-  const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  const clientIp =
+    req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-  const bannedIp = await BannedIP.findOne({ ipAddress: clientIp });
+  // Check for banned subnets
+  const [ipBase] = clientIp.split('.').slice(0, 3); // Extract "152.59.16"
+  const subnetPattern = `${ipBase}.*`;
+
+  const bannedIp = await BannedIP.findOne({
+    $or: [
+      { ipAddress: clientIp }, // Exact match
+      { ipAddress: subnetPattern }, // Subnet match
+    ],
+  });
+
   if (bannedIp) {
+    logRouteUsage(req.path, req.method, 'Banned IP/Subnet', 0xff0000);
     return res.status(403).json({ message: 'Your IP has been banned by our services…' });
-  }
-
-  const ipParts = clientIp.split('.');
-  const ipPattern = `${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.x`;
-
-  const bannedRange = await BannedIP.findOne({ ipRange: ipPattern });
-  if (bannedRange) {
-    return res.status(403).json({ message: 'Your IP range has been banned by our services…' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
     if (err) {
       logRouteUsage(req.path, req.method, 'JWT Verification Failed', 0xff0000);
-      return res.status(403).json({ message: 'Forbidden' });
+      return res.status([403).json({ message: 'Forbidden' });
     }
 
     const targetUser = await User.findOne({ id: decodedToken.id }).lean();
