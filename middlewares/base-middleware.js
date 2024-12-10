@@ -6,7 +6,7 @@ const User = require('../models/User');
 const Buser = require('../models/Buser');
 const Blacklist = require('../models/Blacklist');
 const Count = require('../models/Count');
-const bannedIp = require('../models/BannedIp');
+const BannedIP = require('../models/BannedIp');
 
 const POST_LOGS = process.env.WEB_LOGS;
 
