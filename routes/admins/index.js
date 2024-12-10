@@ -166,6 +166,10 @@ router.get('/requests/:requestId', async (req, res) => {
   }
 });
 
+const formatForEmail = (input) => {
+  return input.replace(/\n/g, '<br>');
+};
+
 router.post('/send/email', async (req, res) => {
   const { requestId, reviewMessage, status } = req.body;
   const user = await req.user;
@@ -188,11 +192,13 @@ router.post('/send/email', async (req, res) => {
       const templatePath = path.join(__dirname, 'send.html');
       let htmlTemplate = fs.readFileSync(templatePath, 'utf-8');
 
+    const reviewMessageFormatted = formatForEmail(reviewMessage);
+
       // Replace placeholders
       htmlTemplate = htmlTemplate.replace('{{username}}', myUser.username);
       htmlTemplate = htmlTemplate.replace('{{requestId}}', requestId);
       htmlTemplate = htmlTemplate.replace('{{requestIda}}', requestId);
-      htmlTemplate = htmlTemplate.replace('{{reviewMessage}}', reviewMessage || "No review message provided.");
+      htmlTemplate = htmlTemplate.replace('{{reviewMessage}}', reviewMessageFormatted || "No review message provided.");
       htmlTemplate = htmlTemplate.replace('{{status}}', status);
       htmlTemplate = htmlTemplate.replace('{{requestName}}', myRequest.typeName);
 
