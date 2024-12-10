@@ -6,6 +6,7 @@ const User = require('../models/User');
 const Buser = require('../models/Buser');
 const Blacklist = require('../models/Blacklist');
 const Count = require('../models/Count');
+const bannedIp = require('../models/BannedIp');
 
 const POST_LOGS = process.env.WEB_LOGS;
 
@@ -74,6 +75,12 @@ const authMiddleware = async (req, res, next) => {
     res.clearCookie('token', { httpOnly: true, secure: true });
     logRouteUsage(req.path, req.method, 'Blacklisted Token', 0xff0000);
     return res.status(403).json({ message: 'Your session has expired. Please login again.' });
+  }
+  const clientIp = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  
+  const bannedIp = await BannedIP.findOne({ ipAddress: clientIp });
+  if (bannedIp) {
+    return res.status(403).json({ message: 'Your IP has been banned by our services…' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {

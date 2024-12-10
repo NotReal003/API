@@ -5,7 +5,6 @@ const { authMiddleware, notFoundHandler } = require("./middlewares/base-middlewa
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
-const ipBanMiddleware = require('./middlewares/ipBanMiddleware');
 
 const app = express();
 
@@ -21,7 +20,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(authMiddleware);
 app.use("/", baseRouter);
 app.use(notFoundHandler);
-app.use(ipBanMiddleware);
 
 app.get("/code", (req, res) => {
   res.redirect('https://github.com/NotReal003/API');
