@@ -5,7 +5,7 @@ const ipBanMiddleware = async (req, res, next) => {
 
   try {
     const bannedIp = await BannedIP.findOne({ ipAddress: clientIp });
-    if (bannedIp) {
+    if (!bannedIp) {
       return res.status(403).json({ message: 'Your IP has been banned by our services…' });
     }
     next();
