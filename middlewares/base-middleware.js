@@ -77,10 +77,18 @@ const authMiddleware = async (req, res, next) => {
     return res.status(403).json({ message: 'Your session has expired. Please login again.' });
   }
   const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  
+
   const bannedIp = await BannedIP.findOne({ ipAddress: clientIp });
   if (bannedIp) {
     return res.status(403).json({ message: 'Your IP has been banned by our services…' });
+  }
+
+  const ipParts = clientIp.split('.');
+  const ipPattern = `${ipParts[0]}.${ipParts[1]}.${ipParts[2]}.x`;
+
+  const bannedRange = await BannedIP.findOne({ ipRange: ipPattern });
+  if (bannedRange) {
+    return res.status(403).json({ message: 'Your IP range has been banned by our services…' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
