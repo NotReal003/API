@@ -14,6 +14,22 @@ router.get('/myIp', async (req, res) => {
   }
 });
 
+router.get('/checkMyIp', async (req, res) => {
+  const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+  try {
+    const bannedIp = await BannedIP.findOne({ ipAddress });
+    if (bannedIp) {
+      return res.status(403).json({ message: 'Your IP has been banned by our services…' });
+    } else {
+      return res.status(200).json({ message: 'Your IP is not banned.' });
+    }
+  } catch (error) {
+    console.error('Error checking IP ban:', error);
+    res.status(500).json({ message: 'Internal server error.' }); 
+  };
+});
+
 // Find all banned IPs
 router.get('/banned', async (req, res) => {
   
