@@ -76,7 +76,7 @@ const authMiddleware = async (req, res, next) => {
     logRouteUsage(req.path, req.method, 'Blacklisted Token', 0xff0000);
     return res.status(403).json({ message: 'Your session has expired. Please login again.' });
   }
-  const clientIp = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   
   const bannedIp = await BannedIP.findOne({ ipAddress: clientIp });
   if (bannedIp) {
