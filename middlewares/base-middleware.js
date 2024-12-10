@@ -98,7 +98,7 @@ const authMiddleware = async (req, res, next) => {
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
     if (err) {
       logRouteUsage(req.path, req.method, 'JWT Verification Failed', 0xff0000);
-      return res.status([403).json({ message: 'Forbidden' });
+      return res.status(403).json({ message: 'Forbidden' });
     }
 
     const targetUser = await User.findOne({ id: decodedToken.id }).lean();
