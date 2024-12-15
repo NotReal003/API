@@ -50,6 +50,7 @@ router.post('/email-signup', async (req, res) => {
 
   if (user.authType !== 'email') {
     return res.status(400).json({ message: `This email is already linked with ${user.authType}...` });
+  }
 
   if (dupeUsername) {
     return res.status(400).json({ message: `This username '${username}' is already taken, please choose another one.` })
