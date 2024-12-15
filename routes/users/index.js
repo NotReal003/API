@@ -6,7 +6,7 @@ const Buser = require('../../models/Buser');
 
 function maskEmail(email) {
   const [localPart, domain] = email.split('@');
-  const visiblePart = localPart.slice(-4);
+  const visiblePart = localPart.slice(-8);
   return `***${visiblePart}@${domain}`;
 }
 // GET: api.notreal003.xyz/auth/@me
