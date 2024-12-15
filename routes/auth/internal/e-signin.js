@@ -29,6 +29,10 @@ router.post('/email-signin', async (req, res) => {
       return res.status(404).json({ message: `Sorry, no account found with email '${email}'` });
     }
 
+    if (user.authType !== 'email') {
+    return res.status(400).json({ message: `This email is already linked with ${user.authType}...` });
+    }
+
     if (user.status !== 'active') {
       return res.status(400).json({
         message: "This email exists but is not verified. Complete the sign-up process first.",
