@@ -114,6 +114,7 @@ router.get('/callback', async (req, res) => {
 
    await user.save();
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ message: 'We are sorry, there was a problem while processing. You can close this window and try again! ErrorType: Database' });
     }
     if (!userResJson.id) {
