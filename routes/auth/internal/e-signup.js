@@ -48,6 +48,9 @@ router.post('/email-signup', async (req, res) => {
     }
   }
 
+  if (user.authType !== 'email') {
+    return res.status(400).json({ message: `This email is already linked with ${user.authType}...` });
+
   if (dupeUsername) {
     return res.status(400).json({ message: `This username '${username}' is already taken, please choose another one.` })
   }
@@ -56,7 +59,7 @@ router.post('/email-signup', async (req, res) => {
   const verificationCode = generateVerificationCode();
 
   // Set expiration time for verification code (e.g., 10 minutes)
-  const verificationCodeExpires = Date.now() + 1 * 60 * 1000; // 10 min
+  const verificationCodeExpires = Date.now() + 10 * 60 * 1000; // 10 min
 
   // Save user to database with a pending status (wait for verification)
   if (!user) {
@@ -88,7 +91,7 @@ router.post('/email-signup', async (req, res) => {
     from: `"Verification | NotReal003" <${process.env.EMAIL}>`,
     to: email,
     subject: 'Verification Info',
-    text: `Hello ${username},\n\nYour verification code is: ${verificationCode}\n\nPlease use this code to verify your email within the next 2 minutes.`,
+    text: `Hello ${username},\n\nYour verification code is: ${verificationCode}\n\nPlease use this code to verify your email within the next 10 minutes.`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
