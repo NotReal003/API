@@ -95,8 +95,8 @@ router.put('/:requestId', async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    if (request.status === status) {
-      return res.status(400).json({ message: `This request is already marked as ${request.status}!` });
+    if (request.status === 'PENDING') {
+      return res.status(400).json({ message: `This request is already ${request.status}!` });
     }
 
     request.status = status;
@@ -138,7 +138,7 @@ router.get('/requests', async (req, res) => {
       return res.status(403).json({ code: 0, message: 'You do not have permission to view these requests.' });
     }
   } catch (error) {
-    console.error('Error fetching requests:');
+    console.error(error.message);
     res.status(500).json({ message: 'Failed to fetch requests. Please try again later.' });
   }
 });
