@@ -95,6 +95,10 @@ router.put('/:requestId', async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
+    if (request.status === status) {
+      return res.status(400).json({ message: `This request is already marked as ${request.status}!` });
+    }
+
     request.status = status;
     request.reviewed = true;
     if (reviewMessage) {
