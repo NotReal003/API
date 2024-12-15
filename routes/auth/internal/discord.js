@@ -56,35 +56,63 @@ router.get('/callback', async (req, res) => {
     }
 
     try {
-      let user = await User.findOne({ id: userResJson.id });
+     let user = await User.findOne({ id: userResJson.id });
 
-      if (!user) {
-        console.log('Creating new user:', userResJson.id, userResJson.username);
-        user = new User({
-          id: userResJson.id,
-          email: userResJson.email,
-          username: userResJson.username,
-          avatarHash: userResJson.avatar,
-          accessToken: oauthRes.data.access_token,
-          refreshToken: oauthRes.data.refresh_token,
-          displayName: userResJson.global_name,
-          staff: false,
-          admin: false,
-          authType: 'discord',
-          ip: userIp,
-          device: userAgent,
-        });
-      } else {
-        console.log('Updating existing user:', userResJson.id, userResJson.username);
-        user.email = userResJson.email;
-        user.avatarHash = userResJson.avatar;
-        user.accessToken = oauthRes.data.access_token;
-        user.refreshToken = oauthRes.data.refresh_token;
-        user.displayName = userResJson.global_name;
-        user.authType = 'discord';
+     if (!user) {
+      console.log('Creating new user:', userResJson.id, userResJson.username);
+
+     // a unique username
+      let username = userResJson.username;
+      let existingUser = await User.findOne({ username });
+      let count = 1;
+
+      while (existingUser) {
+        username = `${userResJson.username}${count}`;
+        existingUser = await User.findOne({ username });
+        count++;
       }
 
-      await user.save();
+     user = new User({
+       id: userResJson.id,
+       email: userResJson.email,
+       username,
+       avatarHash: userResJson.avatar,
+       accessToken: oauthRes.data.access_token,
+       refreshToken: oauthRes.data.refresh_token,
+       displayName: userResJson.global_name,
+       staff: false,
+       admin: false,
+       authType: 'discord',
+       ip: userIp,
+       device: userAgent,
+     });
+   } else {
+     console.log('Updating existing user:', userResJson.id, userResJson.username);
+     user.email = userResJson.email;
+     user.avatarHash = userResJson.avatar;
+     user.accessToken = oauthRes.data.access_token;
+     user.refreshToken = oauthRes.data.refresh_token;
+     user.displayName = userResJson.global_name;
+     user.authType = 'discord';
+
+     // Check if username is already in use by another user
+     const otherUser = await User.findOne({ username: userResJson.username, id: { $ne: user.id } });
+     if (otherUser) {
+       let username = userResJson.username;
+       let existingUser = await User.findOne({ username });
+       let count = 1;
+
+       while (existingUser) {
+         username = `${userResJson.username}${count}`;
+         existingUser = await User.findOne({ username });
+         count++;
+       }
+
+       user.username = username;
+     }
+   }
+
+   await user.save();
     } catch (error) {
       return res.status(500).json({ message: 'We are sorry, there was a problem while processing. You can close this window and try again! ErrorType: Database' });
     }
