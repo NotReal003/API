@@ -8,4 +8,4 @@ const CountSchema = new mongoose.Schema({
   monthlyVisits: { type: Map, of: Number, default: {} }, //
 });
 
-const Count = mongoose.model('Count', CountSchema);
+module.exports = mongoose.model('Count', CountSchema);
