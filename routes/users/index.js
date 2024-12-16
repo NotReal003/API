@@ -69,8 +69,8 @@ router.get('/@me', async (req, res) => {
     const userEmail = maskEmail(user.email);
 
     res.json({
-      id: discordUserData.id,
-      username: discordUserData.username,
+      id: user.id,
+      username: user.username,
       avatarHash: discordUserData.avatar,
       email: userEmail,
       displayName: user.displayName,
