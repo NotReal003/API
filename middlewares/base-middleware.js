@@ -169,7 +169,13 @@ const logRouteUsage = (path, method, user, color) => {
   });
 
   // Fire-and-forget logging to Count
-  (async () => {
+   (async () => {
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const startOfWeek = new Date();
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+    const weekKey = startOfWeek.toISOString().split('T')[0];
+    const monthKey = today.slice(0, 7); // YYYY-MM
+
     try {
       const pageType = 'api';
       let countRecord = await Count.findOne({ pageType });
@@ -179,28 +185,26 @@ const logRouteUsage = (path, method, user, color) => {
           pageType,
           totalVisits: 0,
           dailyVisits: {},
-          weeklyVisits: 0,
-          monthlyVisits: 0,
+          weeklyVisits: {},
+          monthlyVisits: {},
         });
       }
 
+      // Update total visits
       countRecord.totalVisits += 1;
+
+      // Update daily visits
       countRecord.dailyVisits.set(today, (countRecord.dailyVisits.get(today) || 0) + 1);
 
-      const last7Days = Array.from(countRecord.dailyVisits.entries())
-        .filter(([date]) => new Date(date) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))
-        .reduce((sum, [, count]) => sum + count, 0);
+      // Update weekly visits
+      countRecord.weeklyVisits.set(weekKey, (countRecord.weeklyVisits.get(weekKey) || 0) + 1);
 
-      const last30Days = Array.from(countRecord.dailyVisits.entries())
-        .filter(([date]) => new Date(date) >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
-        .reduce((sum, [, count]) => sum + count, 0);
-
-      countRecord.weeklyVisits = last7Days;
-      countRecord.monthlyVisits = last30Days;
+      // Update monthly visits
+      countRecord.monthlyVisits.set(monthKey, (countRecord.monthlyVisits.get(monthKey) || 0) + 1);
 
       await countRecord.save();
     } catch (error) {
-      console.error('Error tracking visits:', error.message);
+      console.error('Error tracking API visit:', error);
     }
   })();
 };
