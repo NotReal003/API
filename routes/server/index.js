@@ -15,43 +15,30 @@ function maskEmail(email) {
 
 router.get('/visits', async (req, res) => {
   try {
-    // Check if the user is authenticated
     const user = req.user;
-    if (!user) {
-      return res.status(401).json({ message: 'Unauthorized' });
+    if (!user || !user.admin) {
+      return res.status(user ? 403 : 401).json({ message: 'Unauthorized' });
     }
 
-    // Check if the user has admin privileges
-    if (!user.admin) {
-      return res.status(403).json({ message: 'You do not have permission to view this area.' });
-    }
-
-    // Fetch all count records
     const countRecords = await Count.find();
 
-    // Transform the data into a simpler format
     const pageStats = countRecords.map((record) => ({
       pageType: record.pageType,
       totalVisits: record.totalVisits,
       dailyVisits: Array.from(record.dailyVisits.entries()), // Convert Map to array
-      weeklyVisits: record.weeklyVisits,
-      monthlyVisits: record.monthlyVisits,
+      weeklyVisits: Array.from(record.weeklyVisits.entries()), // Weekly details
+      monthlyVisits: Array.from(record.monthlyVisits.entries()), // Monthly details
     }));
 
-    // Send the response
     res.status(200).json({
       success: true,
       pageStats,
     });
   } catch (error) {
     console.error('Error fetching visit data:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching visit data.',
-    });
+    res.status(500).json({ success: false, message: 'Error fetching visit data.' });
   }
 });
-
 
 router.get('/manage/user/:user', async (req, res) => {
   const user = await req.user;
