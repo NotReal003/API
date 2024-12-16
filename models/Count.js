@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const CountSchema = new mongoose.Schema({
-  pageType: { type: String, required: true, unique: true },
+  pageType: { type: String, required: true },
   totalVisits: { type: Number, default: 0 },
-  dailyVisits: { type: Map, of: Number, default: {} },
-  weeklyVisits: { type: Number, default: 0 },
-  monthlyVisits: { type: Number, default: 0 },
+  dailyVisits: { type: Map, of: Number, default: {} }, // date (YYYY-MM-DD), Value: count
+  weeklyVisits: { type: Map, of: Number, default: {} }, // Week Start (YYYY-MM-DD), Value: count
+  monthlyVisits: { type: Map, of: Number, default: {} }, //
 });
 
-module.exports = mongoose.model('Count', CountSchema);
+const Count = mongoose.model('Count', CountSchema);
