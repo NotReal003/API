@@ -95,7 +95,7 @@ router.put('/:requestId', async (req, res) => {
       return res.status(404).json({ message: 'Request not found' });
     }
 
-    if (request.status === 'PENDING') {
+    if (request.status === 'PENDING' && request.status === status) {
       return res.status(400).json({ message: `This request is already ${request.status}!` });
     }
 
