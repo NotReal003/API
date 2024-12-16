@@ -15,9 +15,13 @@ router.get('/:pageType', async (req, res) => {
   }
 
   const today = new Date().toISOString().split('T')[0]; // Get today's date (YYYY-MM-DD)
+  const startOfWeek = new Date(); // Get the start of the current week
+  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Sunday
+  const weekKey = startOfWeek.toISOString().split('T')[0];
+
+  const monthKey = today.slice(0, 7); // YYYY-MM
 
   try {
-    // Find or create a document for the pageType
     let countRecord = await Count.findOne({ pageType });
 
     if (!countRecord) {
@@ -25,8 +29,8 @@ router.get('/:pageType', async (req, res) => {
         pageType,
         totalVisits: 0,
         dailyVisits: {},
-        weeklyVisits: 0,
-        monthlyVisits: 0,
+        weeklyVisits: {},
+        monthlyVisits: {},
       });
     }
 
@@ -36,17 +40,11 @@ router.get('/:pageType', async (req, res) => {
     // Update daily visits
     countRecord.dailyVisits.set(today, (countRecord.dailyVisits.get(today) || 0) + 1);
 
-    // Update weekly and monthly visits
-    const last7Days = Array.from(countRecord.dailyVisits.entries())
-      .filter(([date]) => new Date(date) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))
-      .reduce((sum, [, count]) => sum + count, 0);
+    // Update weekly visits
+    countRecord.weeklyVisits.set(weekKey, (countRecord.weeklyVisits.get(weekKey) || 0) + 1);
 
-    const last30Days = Array.from(countRecord.dailyVisits.entries())
-      .filter(([date]) => new Date(date) >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
-      .reduce((sum, [, count]) => sum + count, 0);
-
-    countRecord.weeklyVisits = last7Days;
-    countRecord.monthlyVisits = last30Days;
+    // Update monthly visits
+    countRecord.monthlyVisits.set(monthKey, (countRecord.monthlyVisits.get(monthKey) || 0) + 1);
 
     await countRecord.save();
 
