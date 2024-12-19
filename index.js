@@ -21,10 +21,6 @@ app.use(authMiddleware);
 app.use("/", baseRouter);
 app.use(notFoundHandler);
 
-app.get("/code", (req, res) => {
-  res.redirect('https://github.com/NotReal003/API');
-});
-
 const PORT = process.env.PORT || 3001;
 
 if (!process.env.MONGODB_URI) {
