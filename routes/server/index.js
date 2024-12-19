@@ -7,6 +7,10 @@ router.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
+router.get("/code", (res) => {
+  res.redirect('https://github.com/notreal003/API');
+});
+
 function maskEmail(email) {
   const [localPart, domain] = email.split('@');
   const visiblePart = localPart.slice(-4); // Keep last 4 characters of local part visible
