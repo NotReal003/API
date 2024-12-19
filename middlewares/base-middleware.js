@@ -27,7 +27,7 @@ const authMiddleware = async (req, res, next) => {
     '/collect/request',
     '/collect/pay',
     '/collect/social',
-    '/code',
+    '/source',
   ];
 
   const ignorePaths = ['/health'];
