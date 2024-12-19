@@ -7,7 +7,7 @@ router.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
-router.get("/code", (res) => {
+router.get("/source", (req, res) => {
   res.redirect('https://github.com/notreal003/API');
 });
 
