@@ -18,7 +18,7 @@ router.post('/guild', async (req, res) => {
   }
 
   if (inGameName.length > 16 || inGameName.length < 2) {
-    return res.status(400).json({ message: 'The in-game name must be under 2-16 characters.' });
+    return res.status(400).json({ message: 'The username name must be under 2-16 characters.' });
   }
   if (messageLink.length > 2000 || messageLink.length < 2) {
     return res.status(400).json({ message: 'The reason for joining guild must be under 2-2000 characters.' });
@@ -30,13 +30,13 @@ router.post('/guild', async (req, res) => {
   try {
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL1;
     const payload = {
-      content: `A new guild application from ${user.username} (ID: ${user.id})`,
+      content: `A new Application from ${user.username} (ID: ${user.id})`,
       embeds: [
         {
-          title: 'Guild Application',
+          title: 'Application',
           fields: [
             {
-              name: 'In-Game Name',
+              name: 'Username',
               value: inGameName,
             },
             {
@@ -71,12 +71,12 @@ router.post('/guild', async (req, res) => {
       inGameName,
       messageLink,
       additionalInfo,
-      typeName: 'Guild application',
+      typeName: 'Application',
     });
 
     await request.save();
 
-    res.status(200).json({ message: 'Guild application submitted successfully', requestId: request._id });
+    res.status(200).json({ message: 'Application submitted successfully', requestId: request._id });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ message: 'API has an issue, the developer has been notified.' });
