@@ -55,7 +55,8 @@ ADMIN_ID=theAdminId(user_id)
 G_ID=github_client_id
 G_SECRET=github_client_secret
 ```
-(please note that the GitHub Auth is not available for now so just for optional)
+(please note that the GitHub Auth is not available for now so just for optional).
+
 5. Start the backend server:  
 ```bash
 node index.js
