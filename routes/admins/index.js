@@ -70,7 +70,7 @@ router.delete('/requests/:userId', async (req, res) => {
 router.put('/:requestId', async (req, res) => {
   const user = await req.user;
   const { requestId } = req.params;
-  const { status, reviewMessage } = req.body;
+  const { status } = req.body;
   let { reviewMessage } = req.body;
 
   if (!['APPROVED', 'DENIED', 'PENDING', 'CANCELLED', 'RESOLVED'].includes(status)) {
