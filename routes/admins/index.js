@@ -103,7 +103,7 @@ router.put('/:requestId', async (req, res) => {
     request.status = status;
     request.reviewed = true;
     if (reviewMessage) {
-      reviewMessage = `${reviewMessage}\n\nReviewer,\n${user.username},\nSkyLine Guild`;
+      reviewMessage = `${reviewMessage}\n\nReviewer,\n${user.displayName},\nSkyLine Guild`;
       request.reviewMessage = reviewMessage;
     }
     await request.save();
