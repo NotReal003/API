@@ -137,7 +137,7 @@ router.post('/support', async (req, res) => {
       type: 'support',
       messageLink,
       additionalInfo,
-      typeName: 'support querie',
+      typeName: 'Support Querie',
     });
 
     await request.save();
@@ -206,7 +206,7 @@ router.post('/report', async (req, res) => {
       type: 'report',
       messageLink,
       additionalInfo,
-      typeName: 'Discord report',
+      typeName: 'Discord Report',
     });
 
     await request.save();
