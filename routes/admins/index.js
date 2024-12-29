@@ -71,6 +71,7 @@ router.put('/:requestId', async (req, res) => {
   const user = await req.user;
   const { requestId } = req.params;
   const { status, reviewMessage } = req.body;
+  let { reviewMessage } = req.body;
 
   if (!['APPROVED', 'DENIED', 'PENDING', 'CANCELLED', 'RESOLVED'].includes(status)) {
     return res.status(400).json({ message: 'Invalid status given' });
@@ -102,6 +103,7 @@ router.put('/:requestId', async (req, res) => {
     request.status = status;
     request.reviewed = true;
     if (reviewMessage) {
+      reviewMessage = `${reviewMessage}\n\nReviewer,\n${user.username},\nSkyLine Guild`;
       request.reviewMessage = reviewMessage;
     }
     await request.save();
