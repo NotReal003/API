@@ -267,7 +267,7 @@ router.delete('/:thisUser', async (req, res) => {
   if (!user) {
     return res.status(401).json({ code: 0, message: 'Unauthorized' });
   }
-    if (user.id === process.env.ADMIN_ID) {
+    if (user.id === process.env.ADMIN_ID || user.admin === true) {
       user.isAdmin = true;
     }
 
@@ -316,6 +316,39 @@ router.delete('/blocked/:thisUser', async (req, res) => {
   } catch (error) {
     console.error('Error while deleting request:');
     res.status(500).json({ message: 'Failed to delete request. Please try again later.' });
+  }
+});
+
+router.get('/:thisUser', async (req, res) => {
+  const user = await req.user;
+
+  if (!user) {
+    return res.status(401).json({ code: 0, message: 'Unauthorized' });
+  }
+
+  try {
+    const { thisUser } = req.params;
+    let request = await User.findOne({ id: thisUser });
+
+    if (!request) {
+      request = await User.findOne({ username: thisUser });
+    }
+
+    if (!request) {
+      return res.status(404).json({ code: 0, message: 'User not found.' });
+    }
+
+    res.status(200).json({
+      username: request.username,
+      displayName: request.displayName,
+      id: request.id,
+      avatarHash: request.avatarHash,
+      staff: request.staff,
+      admin: request.admin,
+    });
+  } catch (error) {
+    console.error('Error while fetching request:');
+    res.status(500).json({ message: 'Failed to fetch user. Please try again later.' });
   }
 });
 

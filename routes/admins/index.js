@@ -67,7 +67,7 @@ router.delete('/requests/:userId', async (req, res) => {
   }
 });
 
-router.put('/:requestId', async (req, res) => {
+router.patch('/:requestId', async (req, res) => {
   const user = await req.user;
   const { requestId } = req.params;
   const { status } = req.body;
@@ -103,14 +103,13 @@ router.put('/:requestId', async (req, res) => {
     request.status = status;
     request.reviewed = true;
     if (reviewMessage) {
-      reviewMessage = `${reviewMessage}\n\nReviewer,\n${user.displayName},\nSkyLine Guild`;
       request.reviewMessage = reviewMessage;
     }
     await request.save();
 
     const webhookUrl = process.env.WEB_TOKEN; // Replace with your Discord webhook URL
     const discordMessage = {
-      content: `Hey <@${request.id}>! Your request has been updated :) Check it at https://request.notreal003.xyz/one`,
+      content: `Hey <@${request.id}>! Your request has been updated :) \nCheck it at https://request.notreal003.xyz/one`,
     };
 
     await axios.post(webhookUrl, discordMessage);
@@ -177,7 +176,7 @@ const formatForEmail = (input) => {
 };
 
 router.post('/send/email', async (req, res) => {
-  const { requestId, reviewMessage, status } = req.body;
+  const { requestId } = req.body;
   const user = await req.user;
 
   if (!user) {
@@ -201,10 +200,10 @@ router.post('/send/email', async (req, res) => {
     const reviewMessageFormatted = formatForEmail(myRequest.reviewMessage);
 
       // Replace placeholders
-      htmlTemplate = htmlTemplate.replace('{{username}}', myUser.username);
+      htmlTemplate = htmlTemplate.replace('{{username}}', myUser.displayName);
       htmlTemplate = htmlTemplate.replace('{{requestId}}', requestId);
       htmlTemplate = htmlTemplate.replace('{{requestIda}}', requestId);
-      htmlTemplate = htmlTemplate.replace('{{reviewMessage}}', reviewMessageFormatted || "No review message provided.");
+      htmlTemplate = htmlTemplate.replace('{{reviewMessage}}', reviewMessageFormatted || "No review message was provided.");
       htmlTemplate = htmlTemplate.replace('{{status}}', myRequest.status);
       htmlTemplate = htmlTemplate.replace('{{requestName}}', myRequest.typeName);
 

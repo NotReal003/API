@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken'); // Ensure jwt is required
 const Server = require('../../models/Server');
 const User = require('../../models/User');
 
-router.put('/manage-api', async (req, res) => {
+router.patch('/manage-api', async (req, res) => {
   const { closeType, user } = req.body;
   // const cookies = req.cookies;
   const token = req.cookies.token;
