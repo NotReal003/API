@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-router.post('/', async (res) => {
+router.get('/', async (res) => {
   return res.status(200).json({ message: 'This is default Auth Route.' });
 });
 

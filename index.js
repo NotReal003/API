@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const baseRouter = require("./routes/base-router");
-const { authMiddleware, notFoundHandler } = require("./middlewares/base-middleware");
+const { authMiddleware, notFoundHandler } = require("./middlewares/middleware");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
