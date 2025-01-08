@@ -161,6 +161,7 @@ const extractClientIp = (req) => {
 
 const logRouteUsage = (path, method, user, color, req) => {
   const clientIp = extractClientIp(req);
+  const ipLink = `[${clientIp}](https://request.notreal003.xyz/note?text=${clientIp}`;
   const message = {
     embeds: [
       {
@@ -170,7 +171,7 @@ const logRouteUsage = (path, method, user, color, req) => {
           { name: 'Route:', value: path, inline: true },
           { name: 'Method:', value: method, inline: true },
           { name: 'Accessed By:', value: user, inline: true },
-          { name: 'Client IP:', value: clientIp || 'Unknown', inline: true },
+          { name: 'Client IP:', value: ipLink || 'Unknown', inline: true },
         ],
         timestamp: new Date().toISOString(),
       },
