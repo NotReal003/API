@@ -161,7 +161,7 @@ const extractClientIp = (req) => {
 
 const logRouteUsage = (path, method, user, color, req) => {
   const clientIp = extractClientIp(req);
-  const ipLink = `[${clientIp}](https://request.notreal003.xyz/note?text=${clientIp}`;
+  const ipLink = `[${clientIp}](https://request.notreal003.xyz/note?text=${clientIp})`;
   const message = {
     embeds: [
       {
