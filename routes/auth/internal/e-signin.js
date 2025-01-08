@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -48,22 +50,25 @@ router.post('/email-signin', async (req, res) => {
     user.authType = 'email';
     await user.save();
 
-    // Send verification code to email
-    const mailOptions = {
-      from: `"Verification | NotReal003" <${process.env.EMAIL}>`,
-      to: email,
-      subject: 'Your sign-in verification code',
-      text: `Your verification code is ${verificationCode}. This code will expire in 10 minutes.\n\n Request from IP address: ${userIp}`,
-    };
+    const templatePath = path.join(__dirname, 'e-signin.html');
+    let htmlTemplate = fs.readFileSync(templatePath, 'utf-8');
 
-    transporter.sendMail(mailOptions, (error) => {
-      if (error) {
-        console.error('Error sending verification code:', error);
-        return res.status(500).json({ message: 'Error sending verification code' });
-      }
+     const myUser = await User.findOne({ email });
+
+    htmlTemplate = htmlTemplate.replace('{{username}}', myUser.displayName);
+    htmlTemplate = htmlTemplate.replace('{{ip}}', userIp);
+    htmlTemplate = htmlTemplate.replace('{{Vcode}}', verificationCode);
+
+    // Send verification code to email
+
+      await transporter.sendMail({
+          from: `"Verification | NotReal003" <${process.env.EMAIL}>`,
+          to: myUser.email,
+          subject: `Your sign-in verification code`,
+          html: htmlTemplate
+      });
 
       return res.status(200).json({ message: 'Verification code sent to your email.' });
-    });
   } catch (error) {
     console.error('Error in email-signin route:', error);
     return res.status(500).json({ message: 'Internal server error' });

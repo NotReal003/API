@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fc; /* Light neutral background */
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden; /* To contain the gradient background */
+    }
+
+    .header {
+      background: linear-gradient(to right, #2980b9, #6dd5ed); /* Gradient header */
+      color: #ffffff;
+      padding: 15px;
+      text-align: center;
+    }
+
+
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    p {
+      color: #555555;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .code {
+      background-color: #e9f7fe;
+      border: 1px solid #d1e7f7;
+      padding: 20px;
+      font-size: 32px; /* Larger code font size */
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 3px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .info {
+        color: #777777;
+        font-size: 14px;
+        margin-top: 20px;
+    }
+
+    .footer {
+      background-color: #f2f2f2;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #888888;
+      border-top: 1px solid #cccccc;
+    }
+  </style>
+</head>
+
+
+<body>
+  <div class="container">
+
+      <div class="header">
+           <img src="your_logo.png" alt="Your Logo" width="100" style="margin-bottom: 20px;"> 
+          <h1>Requests Page</h1>
+      </div>
+
+    <div class="content">
+      <p>Welcome {{username}}! Thank you for signing up. To continue with your account, please enter the verification code below:</p>
+      <div class="code">{{Vcode}}</div>
+      <p>This code will expire in 10 minutes.</p>
+
+       <div class="info">
+            <p>Request from IP address: {{email}}</p>
+        </div>
+
+      <p>If you didn't request this code, you can ignore this email.</p>
+
+    </div>
+    <div class="footer">
+      © 2025 NotReal003. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
