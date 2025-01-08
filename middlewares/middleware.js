@@ -39,6 +39,7 @@ const authMiddleware = async (req, res, next) => {
   if (ignorePaths.includes(req.path)) {
     return next();
   }
+  const userIps = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
   // Log public route access
   if (publicPaths.includes(req.path)) {
@@ -159,6 +160,7 @@ const logRouteUsage = (path, method, user, color) => {
           { name: 'Route:', value: path, inline: true },
           { name: 'Method:', value: method, inline: true },
           { name: 'Accessed By:', value: user, inline: true },
+          { name: 'Accssed At:', value: userIps, inline: true },
         ],
         timestamp: new Date().toISOString(),
       },
