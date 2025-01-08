@@ -150,7 +150,7 @@ const notFoundHandler = (req, res) => {
 };
 
 
-const logRouteUsage = (path, method, user, color) => {
+const logRouteUsage = (path, method, user, color, req) => {
   const clientIp = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   const message = {
     embeds: [
