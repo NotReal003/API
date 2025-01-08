@@ -39,16 +39,15 @@ const authMiddleware = async (req, res, next) => {
   if (ignorePaths.includes(req.path)) {
     return next();
   }
-  const userIps = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
   // Log public route access
   if (publicPaths.includes(req.path)) {
-    logRouteUsage(req.path, req.method, 'Public', 0x3498db);
+    logRouteUsage(req.path, req.method, 'Public', 0x3498db, req);
     return next();
   }
 
   if (serverPaths.includes(req.path)) {
-    logRouteUsage(req.path, req.method, 'Server', 0x11806a);
+    logRouteUsage(req.path, req.method, 'Server', 0x11806a, req);
     return next();
   }
 
@@ -68,7 +67,7 @@ const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token || req.headers['authorization'];
 
   if (!token) {
-    logRouteUsage(req.path, req.method, 'Unauthorized - No Token', 0xff0000);
+    logRouteUsage(req.path, req.method, 'Unauthorized - No Token', 0xff0000, req);
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
@@ -76,7 +75,7 @@ const authMiddleware = async (req, res, next) => {
 
   if (blackToken) {
     res.clearCookie('token', { httpOnly: true, secure: true });
-    logRouteUsage(req.path, req.method, 'Blacklisted Token', 0xff0000);
+    logRouteUsage(req.path, req.method, 'Blacklisted Token', 0xff0000, req);
     return res.status(403).json({ message: 'Your session has expired. Please login again.' });
   }
 //  const clientIp =
@@ -100,14 +99,14 @@ const authMiddleware = async (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
     if (err) {
-      logRouteUsage(req.path, req.method, 'JWT Verification Failed', 0xff0000);
+      logRouteUsage(req.path, req.method, 'JWT Verification Failed', 0xff0000, req);
       return res.status(403).json({ message: 'Forbidden' });
     }
 
     const targetUser = await User.findOne({ id: decodedToken.id }).lean();
 
     if (!targetUser) {
-      logRouteUsage(req.path, req.method, 'User Not Found', 0xff0000);
+      logRouteUsage(req.path, req.method, 'User Not Found', 0xff0000, req);
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -122,35 +121,37 @@ const authMiddleware = async (req, res, next) => {
             req.path,
             req.method,
             `Blocked User - Reason: ${blockedUser.reason}`,
-            0xff0000
+            0xff0000,
+            req
           );
           return res
             .status(406)
             .json({ message: 'You are blocked from submitting requests :/', reason: blockedUser.reason });
         }
       } catch (error) {
-        logRouteUsage(req.path, req.method, 'Error Checking Blocked Status', 0xff0000);
+        logRouteUsage(req.path, req.method, 'Error Checking Blocked Status', 0xff0000, req);
         return res.status(500).json({ message: 'Error checking blocked status' });
       }
 
       req.user = targetUser;
-      logRouteUsage(req.path, req.method, targetUser.username || 'Unknown User', 0x00ff00);
+      logRouteUsage(req.path, req.method, targetUser.username || 'Unknown User', 0x00ff00, req);
       return next();
     }
 
     req.user = targetUser;
-    logRouteUsage(req.path, req.method, targetUser.username || 'Unknown User', 0x00ff00);
+    logRouteUsage(req.path, req.method, targetUser.username || 'Unknown User', 0x00ff00, req);
     next();
   });
 };
 
 const notFoundHandler = (req, res) => {
-  logRouteUsage(req.path, req.method, 'Not Found', 0xe74c3c);
+  logRouteUsage(req.path, req.method, 'Not Found', 0xe74c3c, req);
   res.status(404).json({ message: 'Not Found' });
 };
 
+
 const logRouteUsage = (path, method, user, color) => {
-  const today = new Date().toISOString().split('T')[0];
+  const clientIp = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   const message = {
     embeds: [
       {
@@ -160,7 +161,7 @@ const logRouteUsage = (path, method, user, color) => {
           { name: 'Route:', value: path, inline: true },
           { name: 'Method:', value: method, inline: true },
           { name: 'Accessed By:', value: user, inline: true },
-          { name: 'Accssed At:', value: userIps, inline: true },
+          { name: 'Client IP:', value: clientIp || 'Unknown', inline: true },
         ],
         timestamp: new Date().toISOString(),
       },
