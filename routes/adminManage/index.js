@@ -26,7 +26,7 @@ router.patch('/manage-api', async (req, res) => {
       }
 
       // user is admin
-      if (myUser.id === process.env.ADMIN_ID) {
+      if (myUser.admin === true || myUser.id === process.env.ADMIN_ID) {
         myUser.isAdmin = true;
       }
 
@@ -79,7 +79,7 @@ router.get('/manage-api', async (req, res) => {
       }
 
       // Assuming ADMIN_ID is a specific user ID
-      if (myUser.id === process.env.ADMIN_ID) {
+      if (myUser.admin === true || myUser.id === process.env.ADMIN_ID) {
         myUser.isAdmin = true;
       }
 
