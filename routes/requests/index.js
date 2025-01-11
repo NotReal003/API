@@ -128,7 +128,7 @@ router.post('/support', async (req, res) => {
     });
 
     if (!response.ok) {
-      return res.status(500).json({ message: 'The API has an issue. Please try again later. ErrorType: No Logs' });
+      return res.status(500).json({ message: 'The API has an issue. Please contact the Admin. ErrorType: No Logs' });
     }
 
     const request = new Request({
