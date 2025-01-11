@@ -53,6 +53,10 @@ router.delete('/requests/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
 
+    if (!userId) {
+      return res.status(400).json({ code: 0, message: 'Invalid user ID.' });
+    }
+
     // Delete all requests for the specified user
     const deleteResult = await Request.deleteMany({ id: userId });
 
