@@ -222,7 +222,7 @@ router.get('/blocks', async (req, res) => {
 
   try {
     // Ensure the user is an admin based on their Discord ID
-    if (user.id === process.env.ADMIN_ID || user.isAdmin) {
+    if (user.id === process.env.ADMIN_ID || user.admin === true) {
       // Fetch all requests if the user is an admin
       const allRequests = await Buser.find();
       return res.status(200).json(allRequests);
@@ -245,7 +245,7 @@ router.get('/blocked/:thisUser', async (req, res) => {
   try {
     // Ensure the user is an admin based on their Discord ID
     const { thisUser } = req.params;
-    if (user.id === process.env.ADMIN_ID || user.isAdmin) {
+    if (user.id === process.env.ADMIN_ID || user.admin === true) {
       // Fetch all requests if the user is an admin
       const allRequests = await Buser.find({ user_id: thisUser });
       if (!allRequests) {
