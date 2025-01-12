@@ -149,12 +149,10 @@ const notFoundHandler = (req, res) => {
   res.status(404).json({ message: 'Not Found' });
 };
 
-const extractClientIp = (req) => {
-  const rawIp = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  };
+const userIps = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
 const logRouteUsage = (path, method, user, color, req) => {
-  const clientIp = extractClientIp(req);
+  const clientIp = userIps;
   const ipLink = `[${clientIp}](https://request.notreal003.xyz/note?text=${clientIp})`;
   const message = {
     embeds: [
