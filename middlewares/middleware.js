@@ -151,10 +151,7 @@ const notFoundHandler = (req, res) => {
 
 const extractClientIp = (req) => {
   const rawIp = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  }
-
-  return rawIp || 'Unknown';
-};
+  };
 
 const logRouteUsage = (path, method, user, color, req) => {
   const clientIp = extractClientIp(req);
