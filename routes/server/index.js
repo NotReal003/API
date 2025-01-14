@@ -11,6 +11,10 @@ router.get("/source", (req, res) => {
   res.redirect('https://github.com/notreal003/API');
 });
 
+router.get("/producthunt", (req, res) => {
+  res.redirect('');
+});
+
 function maskEmail(email) {
   const [localPart, domain] = email.split('@');
   const visiblePart = localPart.slice(-4); // Keep last 4 characters of local part visible
