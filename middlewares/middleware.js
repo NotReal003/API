@@ -29,6 +29,7 @@ const authMiddleware = async (req, res, next) => {
     '/collect/pay',
     '/collect/social',
     '/collect/request/producthunt',
+    '/producthunt',
     '/source',
     '/Source',
   ];
