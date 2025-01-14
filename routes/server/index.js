@@ -12,7 +12,7 @@ router.get("/source", (req, res) => {
 });
 
 router.get("/producthunt", (req, res) => {
-  res.redirect('');
+  res.redirect('https://www.producthunt.com/products/request-managemen-portal');
 });
 
 function maskEmail(email) {
