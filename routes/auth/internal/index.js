@@ -19,7 +19,7 @@ router.get('/github', (req, res) => {
 });
 
 router.get('/signout', async (req, res) => {
-  const token = req.cookies.token;
+  const token = req.cookies.token || req.headers['authorization'];
 
   // Clear cookie regardless of token presence
   if (!token) {
