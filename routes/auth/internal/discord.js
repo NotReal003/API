@@ -126,16 +126,16 @@ router.get('/callback', async (req, res) => {
        id: userResJson.id,
       },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+//      { expiresIn: '7d' }
     );
-    res
-    .cookie('token', token, {
-      httpOnly: true,
-      // expires: new Date(Date.now() + 6.048e8),
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 604800000,
-      // sameSite: ''
-    })
+//    res
+//    .cookie('token', token, {
+//      httpOnly: true,
+//      // expires: new Date(Date.now() + 6.048e8),
+//      secure: process.env.NODE_ENV === 'production',
+//      maxAge: 604800000,
+//      // sameSite: ''
+//    })
     res.status(200).json({ message: 'Succesfully logged in with Discord.', jwtToken: token });
   } catch (error) {
     console.error('Error during callback processing:', error.message);

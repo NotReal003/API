@@ -24,7 +24,7 @@ router.get('/signout', async (req, res) => {
   // Clear cookie regardless of token presence
   if (!token) {
     res.clearCookie('token', { httpOnly: true, secure: true });
-    return res.status(200).json({ message: 'Successfully logged out. No active session found.' });
+    return res.status(400).json({ message: "You aren't verified, please refresh the page." });
   }
 
   try {
@@ -32,7 +32,7 @@ router.get('/signout', async (req, res) => {
     const savedToken = await Blacklist.findOne({ blacklistToken: token });
     if (savedToken) {
       res.clearCookie('token', { httpOnly: true, secure: true });
-      return res.status(200).json({ message: 'Successfully logged out. Active session found and already blocked.' });
+      return res.status(200).json({ message: 'Successfully logged out. Active session found.' });
     }
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -45,7 +45,7 @@ router.get('/signout', async (req, res) => {
     // Handle invalid token or verification errors
     if (err) {
       res.clearCookie('token', { httpOnly: true, secure: true });
-      return res.status(200).json({ message: 'Successfully logged out. Invalid or expired session token.' });
+      return res.status(406).json({ message: 'Invalid or expired session' });
     }
 
     return res.status(500).json({ message: 'Error during logout. Please try again later.' });

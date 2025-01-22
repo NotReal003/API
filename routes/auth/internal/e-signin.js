@@ -95,7 +95,7 @@ router.post('/verify-signin-email-code', async (req, res) => {
     }
 
     // Generate a JWT token
-    const jwtToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const jwtToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET );
 
     // Clear the verification code and expiration
     user.verificationCode = undefined;

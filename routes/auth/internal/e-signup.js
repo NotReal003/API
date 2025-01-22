@@ -123,7 +123,7 @@ router.post('/verify-email', async (req, res) => {
   if (Date.now() > user.verificationCodeExpires) {
     return res.status(400).json({ message: 'The verification code has expired' });
   }
-  const jwtToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  const jwtToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET );
 
   // If valid, update user status to active
   user.status = 'active';
@@ -133,13 +133,13 @@ router.post('/verify-email', async (req, res) => {
 
   await user.save();
 
-  res
-    .cookie('token', jwtToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 604800000,
-      // sameSite: 'Strict' // Ensuring sameSite is set for security
-    })
+//  res
+//    .cookie('token', jwtToken, {
+//      httpOnly: true,
+//      secure: process.env.NODE_ENV === 'production',
+//      maxAge: 604800000,
+//      // sameSite: 'Strict' // Ensuring sameSite is set for security
+//    })
   res.status(200).json({ message: 'Email verified successfully', jwtToken });
 });
 
