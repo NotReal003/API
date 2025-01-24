@@ -5,7 +5,7 @@ const router = express.Router();
 const User = require('../../models/User');
 
 // Submit a Support Request
-router.post('/guild', async (req, res) => {
+router.post('/application', async (req, res) => {
   const { inGameName, messageLink, additionalInfo } = req.body;
   const user = await req.user;
 
