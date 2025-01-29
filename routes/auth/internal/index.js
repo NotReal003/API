@@ -48,6 +48,7 @@ router.get('/signout', async (req, res) => {
       return res.status(406).json({ message: 'Invalid or expired session' });
     }
 
+    next(error);
     return res.status(500).json({ message: 'Error during logout. Please try again later.' });
   }
 });

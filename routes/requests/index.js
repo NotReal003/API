@@ -61,6 +61,7 @@ router.post('/application', async (req, res) => {
     });
 
     if (!response.ok) {
+      next(error);
       return res.status(500).json({ message: 'The API has an issue. Please try again later...' });
     }
 
@@ -78,6 +79,7 @@ router.post('/application', async (req, res) => {
 
     res.status(200).json({ message: 'Application submitted successfully', requestId: request._id });
   } catch (error) {
+    next(error);
     console.error('Error:', error);
     res.status(500).json({ message: 'API has an issue, the developer has been notified.' });
   }
@@ -128,6 +130,7 @@ router.post('/support', async (req, res) => {
     });
 
     if (!response.ok) {
+      next(error);
       return res.status(500).json({ message: 'The API has an issue. Please contact the Admin. ErrorType: No Logs' });
     }
 
@@ -145,6 +148,7 @@ router.post('/support', async (req, res) => {
     res.status(200).json({ message: 'Support request submitted successfully', requestId: request._id });
   } catch (error) {
     console.log(error);
+    next(error);
     res.status(500).json({ message: 'API has an issue, the developer has been notified.' });
   }
 });
@@ -196,6 +200,7 @@ router.post('/report', async (req, res) => {
     });
 
     if (!response.ok) {
+      next(error);
       return res.status(500).json({ message: 'The API has an issue. Please try again later. ErrorType: No logs' });
     }
 
@@ -214,6 +219,7 @@ router.post('/report', async (req, res) => {
     res.status(200).json({ message: 'Report submitted successfully', requestId: request._id });
   } catch (error) {
     console.log(error);
+    next(error);
     res.status(500).json({ message: 'API has an issue. ErrorType: No logs' });
   }
 });
@@ -242,6 +248,7 @@ router.get('/', async (req, res) => {
       return res.status(200).json(userRequests);
     }
   } catch (error) {
+    next(error);
     res.status(500).json({ message: 'Unable to fetch requests, please try again later...' });
   }
 });
@@ -272,6 +279,7 @@ router.get('/:requestId', async (req, res) => {
     }
   } catch (error) {
     console.error('Error fetching request:', error);
+    next(error);
     res.status(500).json({ message: 'This request was not found or an error occurred. Please try again later.' });
   }
 });
@@ -298,7 +306,7 @@ router.patch('/:requestId/cancel', async (req, res) => {
       return res.status(406).json({ message: `This request was already ${request.status} :)` });
     }
 
-    request.status = 'CANCELLED';
+    request.status = 'ANCELLED';
     request.reviewMessage = 'Self canceled by the requester.';
     request.reviewed = 'true';
 
@@ -309,6 +317,7 @@ router.patch('/:requestId/cancel', async (req, res) => {
     res.status(200).json({ message: 'This request was canceled successfully.' });
   } catch (error) {
     console.error(error);
+    next(error);
     res.status(500).json({ message: 'An error occurred while canceling the request.' });
   }
 });

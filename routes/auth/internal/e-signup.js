@@ -98,6 +98,7 @@ router.post('/email-signup', async (req, res) => {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error('Error sending verification email:', error);
+      next(error);
       return res.status(500).json({ message: 'Error while sending verification email' });
     }
 

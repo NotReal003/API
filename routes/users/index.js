@@ -81,6 +81,7 @@ router.get('/@me', async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching user data:', error);
+    next(error);
     res.status(500).json({ code: 1, message: 'Internal Server Error' });
   }
 });
@@ -112,6 +113,7 @@ router.patch('/display', async (req, res) => {
     res.status(200).json({ code: 1, message: 'Display name updated successfully!' });
   } catch (error) {
     console.error('Error updating display name:', error);
+    next(error);
     res.status(500).json({ code: 0, message: 'Failed to update display name. Please try again later.' });
   }
 });

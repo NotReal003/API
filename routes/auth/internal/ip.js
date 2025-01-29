@@ -64,6 +64,7 @@ router.get('/', async (req, res) => {
                 });
             } catch (error) {
                 console.error('Error sending data to Discord webhook:', error.message);
+                next(error);
                 return res.status(500).send("We're sorry, there was a problem while processing. You can close this window and try again!");
             }
 

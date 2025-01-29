@@ -71,6 +71,7 @@ router.post('/email-signin', async (req, res) => {
       return res.status(200).json({ message: 'Verification code sent to your email.' });
   } catch (error) {
     console.error('Error in email-signin route:', error);
+    next(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 });
@@ -112,6 +113,7 @@ router.post('/verify-signin-email-code', async (req, res) => {
     return res.status(200).json({ message: 'Successfully logged in with email.', jwtToken });
   } catch (error) {
     console.error('Error in verify-signin-email-code route:', error);
+    next(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 });

@@ -96,6 +96,7 @@ router.get('/manage-api', async (req, res) => {
     } catch (error) {
       console.error('Error updating server:', error);
       res.status(500).json({ code: 0, message: 'Failed to update server status. Please try again later.' });
+      next(error);
     }
   });
 });

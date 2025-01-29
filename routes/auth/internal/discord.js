@@ -115,10 +115,11 @@ router.get('/callback', async (req, res) => {
    await user.save();
     } catch (error) {
       console.log(error);
+      next(error);
       return res.status(500).json({ message: 'We are sorry, there was a problem while processing. You can close this window and try again! ErrorType: Database' });
     }
     if (!userResJson.id) {
-      return res.status(500).json({ message: 'We are sorry, there was a problem while processing. You can close this window and try again! ErrorType: No User.' });
+      return res.status(500).json({ message: 'We are sorry, there was a problem while processing. You can close this window and try again! ErrorType: No User Found.' });
     }
 
     const token = jwt.sign(
@@ -139,6 +140,7 @@ router.get('/callback', async (req, res) => {
     res.status(200).json({ message: 'Succesfully logged in with Discord.', jwtToken: token });
   } catch (error) {
     console.error('Error during callback processing:', error.message);
+    next(error);
     res.status(406).json({ message: 'We are sorry, there was a problem while processing. You can close this window and try again! ErrorType: SignIn' });
   }
 });
