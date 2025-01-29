@@ -51,6 +51,7 @@ router.get('/:pageType', async (req, res) => {
     res.status(200).json({ success: true, message: 'Visit tracked successfully.' });
   } catch (error) {
     console.error('Error tracking visit:', error);
+    next(error);
     res.status(500).json({ success: false, message: 'Error tracking visit.' });
   }
 });
