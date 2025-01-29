@@ -61,7 +61,7 @@ router.post('/application', async (req, res, next) => {
     });
 
     if (!response.ok) {
-      next(error);
+      next(error || 'Unable to send application');
       return res.status(500).json({ message: 'The API has an issue. Please try again later...' });
     }
 
@@ -130,7 +130,7 @@ router.post('/support', async (req, res, next) => {
     });
 
     if (!response.ok) {
-      next(error);
+      next(error || 'Unable to send support quirie');
       return res.status(500).json({ message: 'The API has an issue. Please contact the Admin. ErrorType: No Logs' });
     }
 
@@ -191,7 +191,7 @@ router.post('/report', async (req, res, next) => {
       ],
     };
 
-    const response = await fetch(webhookUrl, error, {
+    const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -199,9 +199,8 @@ router.post('/report', async (req, res, next) => {
       body: JSON.stringify(payload),
     });
 
-    //if (!response.ok) {
-    if (error) {
-      next(error);
+    if (!response.ok) {
+      next(error || 'Unable to send report');
       return res.status(500).json({ message: 'The API has an issue. Please try again later. ErrorType: No logs' });
     }
 
