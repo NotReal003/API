@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-router.post('/email-signup', async (req, res) => {
+router.post('/email-signup', async (req, next, res) => {
   const { email, username } = req.body;
 
   if (!email || !username) {
@@ -107,7 +107,7 @@ router.post('/email-signup', async (req, res) => {
 });
 
 // Generate a random 6-digit verification code
-router.post('/verify-email', async (req, res) => {
+router.post('/verify-email', async (req, res, next) => {
   const { email, code } = req.body;
 
   // Find the user by email

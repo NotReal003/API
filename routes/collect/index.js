@@ -4,7 +4,7 @@ const router = express.Router();
 
 const allowedPageTypes = ['request', 'pay', 'social'];
 
-router.get('/:pageType', async (req, res) => {
+router.get('/:pageType', async (req, res, next) => {
   const { pageType } = req.params;
 
   if (!allowedPageTypes.includes(pageType)) {

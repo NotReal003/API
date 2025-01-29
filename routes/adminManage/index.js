@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken'); // Ensure jwt is required
 const Server = require('../../models/Server');
 const User = require('../../models/User');
 
-router.patch('/manage-api', async (req, res) => {
+router.patch('/manage-api', async (req, res, next) => {
   const { closeType, user } = req.body;
   // const cookies = req.cookies;
   const token = req.cookies.token;
@@ -59,7 +59,7 @@ router.patch('/manage-api', async (req, res) => {
   });
 });
 
-router.get('/manage-api', async (req, res) => {
+router.get('/manage-api', async (req, res, next) => {
   const token = req.headers['authorization'];
 
   if (!token) {

@@ -3,7 +3,7 @@ const router = express.Router();
 const Blacklist = require('../../../models/Blacklist');
 const jwt = require('jsonwebtoken');
 
-router.get('/signin', (req, res) => {
+router.get('/signin', (req, res, next) => {
   res.redirect(
     `https://discord.com/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.DISCORD_REDIRECT_URI)}&scope=identify+email`
   );

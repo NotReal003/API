@@ -5,7 +5,7 @@ const router = express.Router();
 const User = require('../../models/User');
 
 // Submit a Support Request
-router.post('/application', async (req, res) => {
+router.post('/application', async (req, res, next) => {
   const { inGameName, messageLink, additionalInfo } = req.body;
   const user = await req.user;
 
@@ -84,7 +84,7 @@ router.post('/application', async (req, res) => {
     res.status(500).json({ message: 'API has an issue, the developer has been notified.' });
   }
 });
-router.post('/support', async (req, res) => {
+router.post('/support', async (req, res, next) => {
   const { messageLink, additionalInfo } = req.body;
   const user = await req.user;
 
@@ -154,7 +154,7 @@ router.post('/support', async (req, res) => {
 });
 
 // Submit a Report Request
-router.post('/report', async (req, res) => {
+router.post('/report', async (req, res, next) => {
   const { messageLink, additionalInfo } = req.body;
   const user = await req.user;
 
@@ -225,7 +225,7 @@ router.post('/report', async (req, res) => {
 });
 
 // Fetch User's Requests
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   const user = await req.user;
 
   if (!user) {
@@ -284,7 +284,7 @@ router.get('/:requestId', async (req, res) => {
   }
 });
 
-router.patch('/:requestId/cancel', async (req, res) => {
+router.patch('/:requestId/cancel', async (req, res, next) => {
   const { requestId } = req.params;
   const user = await req.user;
 

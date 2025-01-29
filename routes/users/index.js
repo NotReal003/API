@@ -10,7 +10,7 @@ function maskEmail(email) {
   return `***${visiblePart}@${domain}`;
 }
 // GET: api.notreal003.xyz/auth/@me
-router.get('/@me', async (req, res) => {
+router.get('/@me', async (req, res, next) => {
   try {
     if (!req.user) {
       return res.status(403).json({ message: 'U1: Unauthorized' });
@@ -86,7 +86,7 @@ router.get('/@me', async (req, res) => {
   }
 });
 
-router.patch('/display', async (req, res) => {
+router.patch('/display', async (req, res, next) => {
   const { displayName } = req.body;
 
   if (!displayName || displayName.trim() === '') {
@@ -172,6 +172,7 @@ router.post('/block/add', async (req, res) => {
     }
   } catch (error) {
     console.error(error);
+    next(error);
     res.status(500).json({ message: 'An error occurred while blocking the user.' });
   }
 });

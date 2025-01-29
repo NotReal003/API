@@ -7,7 +7,7 @@ const User = require('../../../models/User');
 // Discord webhook URL
 const discordWebhookUrl = process.env.USER_AUTH_WEBTOKEN;
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         // Get the JWT token from the query parameters
         const token = req.query.callback;

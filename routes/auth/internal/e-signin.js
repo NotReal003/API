@@ -76,7 +76,7 @@ router.post('/email-signin', async (req, res, next) => {
   }
 });
 
-router.post('/verify-signin-email-code', async (req, res) => {
+router.post('/verify-signin-email-code', async (req, res, next) => {
   try {
     const { email, code } = req.body;
 
