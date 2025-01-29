@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const baseRouter = require("./routes/base-router");
+const mainRouter = require("./routes/main-router");
 const { authMiddleware, notFoundHandler } = require("./middlewares/middleware");
+const errorHandler = require("./middlewares/errorHandler");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
@@ -18,8 +19,9 @@ app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(authMiddleware);
-app.use("/", baseRouter);
+app.use("/", mainRouter);
 app.use(notFoundHandler);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 
