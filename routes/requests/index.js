@@ -191,7 +191,7 @@ router.post('/report', async (req, res, next) => {
       ],
     };
 
-    const response = await fetch(webhookUrl, {
+    const response = await fetch(webhookUrl, error, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -199,7 +199,9 @@ router.post('/report', async (req, res, next) => {
       body: JSON.stringify(payload),
     });
 
-    if (!response.ok) {
+    //if (!response.ok) {
+    if (error) {
+      next(error);
       return res.status(500).json({ message: 'The API has an issue. Please try again later. ErrorType: No logs' });
     }
 
