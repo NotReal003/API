@@ -45,7 +45,7 @@ router.post('/application', async (req, res) => {
             },
             {
               name: 'Additional Info',
-              value: additionalInfo || 'None provided',
+              value: 'Look at the request.',
             },
           ],
         },
@@ -112,7 +112,7 @@ router.post('/support', async (req, res) => {
           fields: [
             {
               name: 'Additional Info',
-              value: additionalInfo || 'None provided',
+              value: 'Look at the request.',
             },
           ],
         },
@@ -180,7 +180,7 @@ router.post('/report', async (req, res) => {
           fields: [
             {
               name: 'Additional Info',
-              value: additionalInfo || 'None provided',
+              value: 'Look at the request.',
             },
           ],
         },
