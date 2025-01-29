@@ -306,7 +306,7 @@ router.patch('/:requestId/cancel', async (req, res) => {
       return res.status(406).json({ message: `This request was already ${request.status} :)` });
     }
 
-    request.status = 'ANCELLED';
+    request.status = 'CANCELLED';
     request.reviewMessage = 'Self canceled by the requester.';
     request.reviewed = 'true';
 
