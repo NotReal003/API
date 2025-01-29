@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-router.post('/email-signin', async (req, res) => {
+router.post('/email-signin', async (req, res, next) => {
   try {
     const { email } = req.body;
 
@@ -71,7 +71,8 @@ router.post('/email-signin', async (req, res) => {
       return res.status(200).json({ message: 'Verification code sent to your email.' });
   } catch (error) {
     console.error('Error in email-signin route:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    next(error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
 
