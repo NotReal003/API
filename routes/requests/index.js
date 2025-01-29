@@ -218,9 +218,8 @@ router.post('/report', async (req, res, next) => {
 
     res.status(200).json({ message: 'Report submitted successfully', requestId: request._id });
   } catch (error) {
-    console.log(error);
     next(error);
-    res.status(500).json({ message: 'API has an issue. ErrorType: No logs' });
+    //res.status(500).json({ message: 'API has an issue. ErrorType: No logs' });
   }
 });
 
