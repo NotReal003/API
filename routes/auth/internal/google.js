@@ -7,7 +7,7 @@ require('../../../config/passport');
 
 const router = express.Router();
 
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/callback', async (req, res, next) => {
   const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
