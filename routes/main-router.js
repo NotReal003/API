@@ -19,5 +19,6 @@ router.use('/collect', require('./collect'));
 router.use('/', require('./server'));
 router.use('/ip', require('./Ip'));
 router.use('/test', require('./test'));
+router.use('/auth/google', require('./auth/internal/google'))
 
 module.exports = router;

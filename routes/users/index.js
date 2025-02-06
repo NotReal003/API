@@ -43,6 +43,18 @@ router.get('/@me', async (req, res, next) => {
         admin: user.admin,
       });
     }
+    if (user.authType === 'google') {
+      return res.status(200).json({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        avatar: user.avatarHash,
+        authType: user.authType,
+        joinedAt: user.joinedAt,
+        staff: user.staff,
+        admin: user.admin,
+      });
+    }
     if (!user.accessToken) {
       return res.status(401).json({ message: 'U 401: Unauthorized' });
     }
