@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
 require('./config/passport');
+const passport = require('passport');
 
 const app = express();
 
