@@ -3,10 +3,11 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const User = require('../../../models/User');
 require('dotenv').config();
-const passport = require('../../../config/passport');
-        require('../../../config/passport'); 
+const passport = require('passport');
 
 const router = express.Router();
+console.log(typeof passport.authenticate);
+
 
 router.get('/', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
