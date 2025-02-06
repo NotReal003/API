@@ -6,6 +6,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
+require('./config/passport');
 
 const app = express();
 
@@ -22,6 +23,8 @@ app.use(authMiddleware);
 app.use("/", mainRouter);
 app.use(notFoundHandler);
 app.use(errorHandler);
+app.use(passport.initialize());
+app.use(passport.session());
 
 const PORT = process.env.PORT || 3001;
 
