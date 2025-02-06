@@ -25,6 +25,8 @@ const authMiddleware = async (req, res, next) => {
     '/auth/verify-signin-email-code',
     '/auth/email-signin-verify',
     '/auth/github',
+    '/auth/google',
+    '/auth/google/callback',
     '/collect/request',
     '/collect/pay',
     '/collect/social',
