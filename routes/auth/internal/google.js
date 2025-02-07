@@ -65,7 +65,7 @@ router.get('/callback', async (req, res, next) => {
       const duplicateEmail = await User.findOne({ email: userResJson.email });
 
       if (duplicateEmail && duplicateEmail.authType !== 'google') {
-        return res.status(400).json({ message: `This email is already in use! and is linked to ${duplicateEmail.username}, the account logged logged with ${duplicateEmail.authType}` });
+        return res.status(400).json({ message: `This email is already in use! The account is linked to ${duplicateEmail.username} and was logged with ${duplicateEmail.authType}, please signin with ${duplicateEmail.authType}! If you need any help please contact us.` });
       }
       
       if (!user) {
