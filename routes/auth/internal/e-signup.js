@@ -20,6 +20,10 @@ const transporter = nodemailer.createTransport({
 router.post('/email-signup', async (req, next, res) => {
   const { email, username } = req.body;
 
+  return res.status(406).json({
+    message: 'Email Sign up / sign in is currently unavailable, please use your Google account or Discord Account.'
+  });
+
   if (!email || !username) {
     return res.status(400).json({ message: 'Email and username are required' });
   }
@@ -109,6 +113,10 @@ router.post('/email-signup', async (req, next, res) => {
 // Generate a random 6-digit verification code
 router.post('/verify-email', async (req, res, next) => {
   const { email, code } = req.body;
+
+  return res.status(406).json({
+    message: 'Email Sign up / sign in is currently unavailable, please use your Google account or Discord Account.'
+  });
 
   // Find the user by email
   const user = await User.findOne({ email });
