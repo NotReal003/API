@@ -86,6 +86,10 @@ router.post('/verify-signin-email-code', async (req, res, next) => {
   try {
     const { email, code } = req.body;
 
+    return res.status(406).json({
+    message: 'Email Sign up / sign in is currently unavailable, please use your Google account or Discord Account.'
+  });
+
     if (!email || !code) {
       return res.status(400).json({ message: 'Email and verification code are required' });
     }
