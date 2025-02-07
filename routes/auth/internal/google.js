@@ -62,6 +62,12 @@ router.get('/callback', async (req, res, next) => {
     try {
       let user = await User.findOne({ id: userResJson.id });
 
+      const duplicateEmail = await User.findOne({ email: userResJson.email });
+
+      if (duplicateEmail && duplicateEmail.authType !== 'google') {
+        return res.status(400).json({ message: `This email is already in use! and is linked to ${duplicateEmail.username}, the account logged logged with ${duplicateEmail.authType}` });
+      }
+      
       if (!user) {
         console.log('Creating new user:', userResJson.id, userResJson.name);
 
