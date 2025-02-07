@@ -20,9 +20,13 @@ const transporter = nodemailer.createTransport({
 router.post('/email-signup', async (req, next, res) => {
   const { email, username } = req.body;
 
-  return res.status(406).json({
+  const notOn = true;
+
+  if (notOn === true) {
+    return res.status(406).json({
     message: 'Email Sign up / sign in is currently unavailable, please use your Google account or Discord Account.'
   });
+  }
 
   if (!email || !username) {
     return res.status(400).json({ message: 'Email and username are required' });
