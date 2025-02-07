@@ -19,6 +19,12 @@ router.post('/email-signin', async (req, res, next) => {
   try {
     const { email } = req.body;
 
+    // mark as not oprational
+
+    return res.status(406).json({
+    message: 'Email Sign up / sign in is currently unavailable, please use your Google account or Discord Account.'
+  });
+
     if (!email) {
       return res.status(400).json({ message: 'Email is required' });
     }
