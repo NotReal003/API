@@ -48,7 +48,7 @@ router.get('/@me', async (req, res, next) => {
         id: user.id,
         username: user.username,
         email: user.email,
-        avatar: user.avatarHash,
+        avatarHash: user.avatarHash,
         authType: user.authType,
         joinedAt: user.joinedAt,
         staff: user.staff,
@@ -72,6 +72,7 @@ router.get('/@me', async (req, res, next) => {
       return res.status(403).json({ code: 1, message: `Discord API Error: ${error.message}`});
     }
 
+    const discordUserAv = `https://cdn.discordapp.com/avatars/${discordData.id}/${discordData.avatar}.webp?size=128`;
     const discordUserData = {
       id: discordData.id,
       username: discordData.username,
