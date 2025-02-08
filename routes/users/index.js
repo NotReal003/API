@@ -84,7 +84,7 @@ router.get('/@me', async (req, res, next) => {
     res.json({
       id: user.id,
       username: user.username,
-      avatarHash: discordUserData.avatar,
+      avatarHash: discordUserAv,
       email: userEmail,
       displayName: user.displayName,
       joinedAt: user.joinedAt,
