@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
 const Count = require('../../models/Count');
+const rateLimit = require('express-rate-limit');
 
 router.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
@@ -13,6 +14,12 @@ router.get("/source", (req, res) => {
 
 router.get("/producthunt", (req, res) => {
   res.redirect('https://www.producthunt.com/products/request-managemen-portal');
+});
+
+const adminLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 5, // Only 5 requests per 10 minutes
+  message: 'Too many requests. Try again later...',
 });
 
 function maskEmail(email) {
@@ -84,7 +91,7 @@ router.get('/manage/user/:user', async (req, res) => {
   }
 });
 
-router.get('/manage/users/all', async (req, res) => {
+router.get('/manage/users/all', adminLimiter, async (req, res) => {
   try {
     const user = await req.user;
     if (!user) {
