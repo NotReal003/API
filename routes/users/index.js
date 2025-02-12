@@ -5,18 +5,28 @@ const User = require('../../models/User');
 const Buser = require('../../models/Buser');
 
 function maskEmail(email) {
-  const [localPart, domain] = email.split("@");
-
-  if (localPart.length <= 2) {
-    return `${localPart[0]}***@${domain}`;
+  if (typeof email !== "string" || !email.includes("@")) {
+    throw new Error("Invalid email format");
   }
 
-  const firstChar = localPart[0];
-  const lastChar = localPart[localPart.length - 1];
-  const maskedPart = "*".repeat(localPart.length - 2);
+  const trimmedEmail = email.trim().toLowerCase();
+  const [localPart, domain] = trimmedEmail.split("@");
+
+  if (!localPart || !domain) {
+    throw new Error("Invalid email structure");
+  }
+
+  if (localPart.length <= 2) {
+    return `${localPart.at(0)}***@${domain}`;
+  }
+
+  const firstChar = localPart.at(0);
+  const lastChar = localPart.at(-1);
+  const maskedPart = "*".repeat(Math.max(1, localPart.length - 2));
 
   return `${firstChar}${maskedPart}${lastChar}@${domain}`;
 }
+
 //function maskEmail(email) {
 //  const [localPart, domain] = email.split('@');
 //  const visiblePart = localPart.slice(-8);
