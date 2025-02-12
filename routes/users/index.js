@@ -44,10 +44,11 @@ router.get('/@me', async (req, res, next) => {
       });
     }
     if (user.authType === 'google') {
+      const userEmail = maskEmail(user.email);
       return res.status(200).json({
         id: user.id,
         username: user.username,
-        email: user.email,
+        email: userEmail,
         avatarHash: user.avatarHash,
         authType: user.authType,
         joinedAt: user.joinedAt,
