@@ -222,7 +222,7 @@ router.put('/unblock', async (req, res) => {
     return res.status(401).json({ code: 0, message: 'U: Unauthorized' });
   }
 
-  if (user.id === process.env.ADMIN_ID) {
+  if (user.id === process.env.ADMIN_ID || user.admin === true) {
     user.isAdmin = true;
   }
 
