@@ -5,10 +5,23 @@ const User = require('../../models/User');
 const Buser = require('../../models/Buser');
 
 function maskEmail(email) {
-  const [localPart, domain] = email.split('@');
-  const visiblePart = localPart.slice(-8);
-  return `***${visiblePart}@${domain}`;
+  const [localPart, domain] = email.split("@");
+
+  if (localPart.length <= 2) {
+    return `${localPart[0]}***@${domain}`;
+  }
+
+  const firstChar = localPart[0];
+  const lastChar = localPart[localPart.length - 1];
+  const maskedPart = "*".repeat(localPart.length - 2);
+
+  return `${firstChar}${maskedPart}${lastChar}@${domain}`;
 }
+//function maskEmail(email) {
+//  const [localPart, domain] = email.split('@');
+//  const visiblePart = localPart.slice(-8);
+//  return `***${visiblePart}@${domain}`;
+//}
 // GET: api.notreal003.xyz/auth/@me
 router.get('/@me', async (req, res, next) => {
   try {
