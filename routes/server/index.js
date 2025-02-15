@@ -56,35 +56,31 @@ router.get('/visits', async (req, res) => {
 });
 
 router.get('/manage/user/:user', async (req, res) => {
-  const user = await req.user;
+  const users = await req.user;
 
-  if (!user) {
+  if (!users) {
     return res.status(401).json({ code: 0, message: 'Unauthorized' });
   }
 
-  if (user.admin === true) {
-    user.isAdmin = true;
+  if (users.admin === true) {
+    users.isAdmin = true;
   }
-  if (user.id === process.env.ADMIN_ID) {
-    user.isAdmin = true;
+  if (users.id === process.env.ADMIN_ID) {
+    users.isAdmin = true;
   }
 
-  if (!user.isAdmin) {
+  if (!users.isAdmin) {
     return res.status(403).json({ code: 0, message: 'You do not have permission to manage this area.' });
   }
 
   try {
-    const request = await User.find({ id: req.params.user });
+    const user = await User.findOne({ id: req.params.user });
 
-    if (!request) {
+    if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    if (request.email) {
-      request.email = maskEmail(request.email);
-    }
-
-    res.status(200).json({ request });
+    res.status(200).json({ user });
   } catch (error) {
     console.error('Error finding user:');
     res.status(500).json({ message: 'There was an error while finding the user. Please try again later.' });
