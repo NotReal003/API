@@ -80,6 +80,8 @@ router.get('/manage/user/:user', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    user.email = maskEmail(user.email),
+
     res.status(200).json({ user });
   } catch (error) {
     console.error('Error finding user:');
