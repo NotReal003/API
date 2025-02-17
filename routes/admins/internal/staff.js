@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../../models/User');
 
-router.patch('/promote/:promoUser', async (req, res) => {
+router.patch('/manage/:promoUser', async (req, res) => {
   const user = await req.user;
   const { promoUser } = req.params;
   const userRole = req.body.role;
