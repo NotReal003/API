@@ -27,16 +27,18 @@ router.patch('/manage/:promoUser/role', async (req, res) => {
     }
 
     if (userRole === "mod") {
-    request.staff = true;
+      request.staff = true;
+      request.admin = false;
     }
     if (userRole === "admin") {
       request.admin = true;
+      request.staff = false;
     } else if (userRole === "user") {
       request.admin = false;
       request.staff = false;
     }
     await request.save();
-    res.status(200).json({ message: 'Promoted user to staff successfully!' });
+    res.status(200).json({ message: 'user updated successfully!' });
   } catch (error) {
     console.error('Error updating user:');
     res.status(500).json({ message: 'There was an error while updating the user. Please try again later.' });
