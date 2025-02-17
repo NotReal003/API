@@ -2,15 +2,16 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../../models/User');
 
-router.put('/promote/:promoUser', async (req, res) => {
+router.patch('/promote/:promoUser', async (req, res) => {
   const user = await req.user;
   const { promoUser } = req.params;
+  const userRole = req.body.role;
 
   if (!user) {
     return res.status(401).json({ code: 0, message: 'Unauthorized' });
   }
 
-  if (user.id === process.env.ADMIN_ID) {
+  if (user.admin === true || user.id === process.env.ADMIN_ID) {
     user.isAdmin = true;
   }
 
@@ -24,11 +25,16 @@ router.put('/promote/:promoUser', async (req, res) => {
     if (!request) {
       return res.status(404).json({ message: 'User not found' });
     }
-    if (request.staff === true) {
-      res.status(400).json({ message: 'This user is already staff' });
-    }
 
+    if (userRole === "mod") {
     request.staff = true;
+    }
+    if (userRole === "admin") {
+      request.admin = true;
+    } else if (userRole === "user") {
+      request.admin = false;
+      request.staff = false;
+    }
     await request.save();
     res.status(200).json({ message: 'Promoted user to staff successfully!' });
   } catch (error) {
