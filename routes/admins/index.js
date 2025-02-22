@@ -187,7 +187,7 @@ router.post('/send/email', async (req, res) => {
       return res.status(403).json({ code: 0, message: 'A: Unauthorized' });
   }
 
-  if (user.id === user.admin === true || user.staff === true) {
+  if (user.admin === true || user.staff === true) {
       user.isAdmin = true;
   }
 
