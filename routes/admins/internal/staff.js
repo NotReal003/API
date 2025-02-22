@@ -32,7 +32,7 @@ router.patch('/manage/:promoUser/role', async (req, res) => {
     }
     if (userRole === "admin") {
       request.admin = true;
-      request.staff = false;
+      request.staff = true;
     } else if (userRole === "user") {
       request.admin = false;
       request.staff = false;
