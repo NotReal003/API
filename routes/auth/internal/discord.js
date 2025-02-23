@@ -127,7 +127,7 @@ router.get('/callback', async (req, res, next) => {
        id: userResJson.id,
       },
       process.env.JWT_SECRET,
-//      { expiresIn: '7d' }
+      { expiresIn: '7d' }
     );
 //    res
 //    .cookie('token', token, {
