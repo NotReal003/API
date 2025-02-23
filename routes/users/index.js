@@ -77,6 +77,7 @@ router.get('/@me', async (req, res, next) => {
         joinedAt: user.joinedAt,
         staff: user.staff,
         admin: user.admin,
+        owner: user.owner,
       });
     }
     if (!user.accessToken) {
@@ -115,6 +116,7 @@ router.get('/@me', async (req, res, next) => {
       authType: user.authType,
       staff: user.staff,
       admin: user.admin,
+      owner: user.owner,
     });
   } catch (error) {
     console.error('Error fetching user data:', error);
