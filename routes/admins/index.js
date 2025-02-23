@@ -113,7 +113,7 @@ router.patch('/:requestId', async (req, res) => {
 
     const webhookUrl = process.env.WEB_TOKEN; // Replace with your Discord webhook URL
     const discordMessage = {
-      content: `Hey <@${request.id}>! Your request has been updated :) \nCheck it at https://request.notreal003.xyz/requestdetail?id=${request._id}`,
+      content: `Hey <@${request.id}>! Your request has been updated :) \nCheck your request here: https://request.notreal003.xyz/requestdetail?id=${request._id}`,
     };
 
     await axios.post(webhookUrl, discordMessage);
