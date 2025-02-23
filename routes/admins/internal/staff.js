@@ -19,7 +19,12 @@ router.patch('/manage/:promoUser/role', async (req, res) => {
     return res.status(403).json({ code: 0, message: 'You do not have permission to manage this area.' });
   }
 
-  if (userRole === "admin" && user.owner === false) {
+  if (user.owner === true) {
+    user.isOwner = true;
+  }
+
+
+  if (userRole === "admin" && !user.isOwner) {
     return res.status(403).json({ message: 'Only Owner can change admins.' })
   }
 
@@ -30,7 +35,7 @@ router.patch('/manage/:promoUser/role', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    if (request.admin === true && user.owner === false) {
+    if (request.admin === true && user.owner !== true) {
       return res.status(406).json({ message: 'Sorry, a admin cannot change another admin...'})
     }
 
