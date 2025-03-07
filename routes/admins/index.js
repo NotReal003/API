@@ -118,8 +118,8 @@ router.patch('/:requestId', async (req, res) => {
     // Define the message based on the user's authentication type
     const messageContent =
       requestUser.authType === 'discord'
-        ? `Hey <@${request.id}>! Your request has been updated 🙂\nCheck your request here: [View Request](https://request.notreal003.xyz/requestdetail?id=${request._id})`
-        : `Hey ${requestUser.username}! Your request has been updated 🙂\nCheck your request here: [View Request](https://request.notreal003.xyz/requestdetail?id=${request._id})`;
+        ? `Hey <@${request.id}>! Your request has been updated 🙂\nCheck your request here: https://request.notreal003.xyz/requestdetail?id=${request._id}`
+        : `Hey ${requestUser.username}! Your request has been updated 🙂\nThe request can be found here: https://request.notreal003.xyz/requestdetail?id=${request._id}`;
 
     // Send Discord message if user authType is discord
     const webhookUrl = process.env.WEB_TOKEN;
