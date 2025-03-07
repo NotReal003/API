@@ -85,6 +85,8 @@ router.patch('/:requestId', async (req, res) => {
     return res.status(401).json({ code: 0, message: 'Unauthorized' });
   }
 
+  let user.isAdmin = false;
+
   if (user.staff === true || user.admin === true) {
     user.isAdmin = true;
   }
@@ -95,9 +97,13 @@ router.patch('/:requestId', async (req, res) => {
 
   try {
     const request = await Request.findById(requestId);
-
     if (!request) {
       return res.status(404).json({ message: 'Request not found' });
+    }
+
+    const requestUser = await User.findOne({ id: request.id });
+    if (!requestUser) {
+      return res.status(404).json({ message: 'Request user not found' });
     }
 
     if (request.status === 'PENDING' && request.status === status) {
@@ -111,40 +117,21 @@ router.patch('/:requestId', async (req, res) => {
     }
     await request.save();
 
-    const webhookUrl = process.env.WEB_TOKEN; // Replace with your Discord webhook URL
-    const discordMessage = {
-      content: `Hey <@${request.id}>! Your request has been updated :) \nCheck your request here: https://request.notreal003.xyz/requestdetail?id=${request._id}`,
-    };
+    if (requestUser.authType === 'discord') {
+      const webhookUrl = process.env.WEB_TOKEN; // Discord webhook URL
+      const discordMessage = {
+        content: `Hey <@${request.id}>! Your request has been updated 🙂 \nCheck your request here: [View Request](https://request.notreal003.xyz/requestdetail?id=${request._id})`,
+      };
 
-    await axios.post(webhookUrl, discordMessage);
+      await axios.post(webhookUrl, discordMessage).catch(err => {
+        console.error('Failed to send Discord notification:', err);
+      });
+    }
 
     res.status(200).json({ message: `Request successfully updated to ${request.status}!` });
   } catch (error) {
-    console.error('Error updating request:');
+    console.error('Error updating request:', error);
     res.status(500).json({ message: 'There was an error while updating the request. Please try again later.' });
-  }
-});
-
-
-router.get('/requests', async (req, res) => {
-  const user = await req.user;
-
-  if (!user) {
-    return res.status(401).json({ code: 0, message: 'Unauthorized' });
-  }
-
-  try {
-    // Ensure the user is an admin based on their Discord ID
-    if (user.admin === true || user.staff === true) {
-      // Fetch all requests if the user is an admin
-      const allRequests = await Request.find();
-      return res.status(200).json(allRequests);
-    } else {
-      return res.status(403).json({ code: 0, message: 'You do not have permission to view these requests.' });
-    }
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: 'Failed to fetch requests. Please try again later.' });
   }
 });
 
