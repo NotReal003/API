@@ -7,6 +7,28 @@ const fs = require('fs');
 const path = require('path');
 const User = require('../../models/User');
 
+router.get('/requests', async (req, res) => {
+  const user = await req.user;
+
+  if (!user) {
+    return res.status(401).json({ code: 0, message: 'Unauthorized' });
+  }
+
+  try {
+    // Ensure the user is an admin based on their Discord ID
+    if (user.admin === true || user.staff === true) {
+      // Fetch all requests if the user is an admin
+      const allRequests = await Request.find();
+      return res.status(200).json(allRequests);
+    } else {
+      return res.status(403).json({ code: 0, message: 'You do not have permission to view these requests.' });
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: 'Failed to fetch requests. Please try again later.' });
+  }
+});
+
 router.delete('/:requestId', async (req, res) => {
   const user = await req.user;
 
