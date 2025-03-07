@@ -85,8 +85,6 @@ router.patch('/:requestId', async (req, res) => {
     return res.status(401).json({ code: 0, message: 'Unauthorized' });
   }
 
-  let user.isAdmin = false;
-
   if (user.staff === true || user.admin === true) {
     user.isAdmin = true;
   }
@@ -117,16 +115,19 @@ router.patch('/:requestId', async (req, res) => {
     }
     await request.save();
 
-    if (requestUser.authType === 'discord') {
-      const webhookUrl = process.env.WEB_TOKEN; // Discord webhook URL
-      const discordMessage = {
-        content: `Hey <@${request.id}>! Your request has been updated 🙂 \nCheck your request here: [View Request](https://request.notreal003.xyz/requestdetail?id=${request._id})`,
-      };
+    // Define the message based on the user's authentication type
+    const messageContent =
+      requestUser.authType === 'discord'
+        ? `Hey <@${request.id}>! Your request has been updated 🙂\nCheck your request here: [View Request](https://request.notreal003.xyz/requestdetail?id=${request._id})`
+        : `Hey ${requestUser.username}! Your request has been updated 🙂\nCheck your request here: [View Request](https://request.notreal003.xyz/requestdetail?id=${request._id})`;
 
-      await axios.post(webhookUrl, discordMessage).catch(err => {
-        console.error('Failed to send Discord notification:', err);
-      });
-    }
+    // Send Discord message if user authType is discord
+    const webhookUrl = process.env.WEB_TOKEN;
+    const discordMessage = { content: messageContent };
+
+    await axios.post(webhookUrl, discordMessage).catch(err => {
+      console.error('Failed to send Discord notification:', err);
+    });
 
     res.status(200).json({ message: `Request successfully updated to ${request.status}!` });
   } catch (error) {
