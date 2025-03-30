@@ -25,7 +25,7 @@ router.patch('/manage/:promoUser/role', async (req, res) => {
 
 
   if (userRole === "admin" && !user.isOwner) {
-    return res.status(403).json({ message: 'Only Owner can change admins.' })
+    return res.status(403).json({ message: 'Owner permission required' })
   }
 
   try {
@@ -36,7 +36,7 @@ router.patch('/manage/:promoUser/role', async (req, res) => {
     }
 
     if (request.admin === true && user.owner !== true) {
-      return res.status(406).json({ message: 'Sorry, a admin cannot change another admin...'})
+      return res.status(406).json({ message: 'Owner permission required'})
     }
 
     if (userRole === "mod") {
