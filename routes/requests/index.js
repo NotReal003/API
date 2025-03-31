@@ -20,11 +20,11 @@ router.post('/application', async (req, res, next) => {
   if (inGameName.length > 16 || inGameName.length < 2) {
     return res.status(400).json({ message: 'The username name must be under 2-16 characters.' });
   }
-  if (messageLink.length > 2000 || messageLink.length < 2) {
-    return res.status(400).json({ message: 'The reason for joining guild must be under 2-2000 characters.' });
+  if (messageLink.length > 1750 || messageLink.length < 2) {
+    return res.status(400).json({ message: 'The reason for joining guild must be under 2-1750 characters.' });
   }
-  if (additionalInfo.length > 2000) {
-    return res.status(400).json({ message: 'The additional information must be under 2000 characters.' });
+  if (additionalInfo.length > 1750) {
+    return res.status(400).json({ message: 'The additional information must be under 1750 characters.' });
   }
 
   try {
@@ -96,11 +96,11 @@ router.post('/support', async (req, res, next) => {
     return res.status(400).json({ message: 'Empty message cannot be submitted!' });
   }
 
-  if (messageLink.length > 2000 || messageLink.length < 10) {
-    return res.status(400).json({ message: 'The "Your Support Request" must be under 10-2000 characters.' });
+  if (messageLink.length > 1750 || messageLink.length < 10) {
+    return res.status(400).json({ message: 'The "Your Support Request" must be under 10-1750 characters.' });
   }
-  if (additionalInfo.length > 2000) {
-    return res.status(400).json({ message: 'The additional information must be under 2000 characters.' });
+  if (additionalInfo.length > 1750) {
+    return res.status(400).json({ message: 'The additional information must be under 1750 characters.' });
   }
 
   try {
@@ -168,8 +168,8 @@ router.post('/report', async (req, res, next) => {
   if (messageLink.length > 1000 || messageLink.length < 2) {
     return res.status(400).json({ message: 'The Discord Message Link / Evidence must be under 2-1000 characters.' });
   }
-  if (additionalInfo.length > 2000) {
-    return res.status(400).json({ message: 'The additional information must be under 2000 characters.' });
+  if (additionalInfo.length > 1750) {
+    return res.status(400).json({ message: 'The additional information must be under 1750 characters.' });
   }
 
   try {
