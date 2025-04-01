@@ -36,7 +36,7 @@ if (!process.env.MONGODB_URI) {
 mongoose.connect(process.env.MONGODB_URI).then(() => {
   console.log("Connected to database.");
 
-  // Ensure indexes are created
+  // Ensure indexes made
   mongoose.connection.db
     .collection("users")
     .createIndex({ id: 1 }, { unique: true })
