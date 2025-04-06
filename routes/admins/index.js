@@ -135,6 +135,9 @@ router.patch('/:requestId', async (req, res) => {
     if (reviewMessage) {
       request.reviewMessage = reviewMessage;
     }
+    if (status === 'ESCALATED') {
+      request.escalated = true;
+    }
     await request.save();
 
     // Define the message based on the user's authentication type
