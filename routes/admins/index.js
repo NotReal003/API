@@ -138,6 +138,9 @@ router.patch('/:requestId', async (req, res) => {
     if (status === 'ESCALATED') {
       request.escalated = true;
     }
+    if (status !== 'ESCALATED') {
+      request.escalated = false;
+    }
     await request.save();
 
     // Define the message based on the user's authentication type
