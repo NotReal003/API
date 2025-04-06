@@ -99,7 +99,7 @@ router.patch('/:requestId', async (req, res) => {
   const { status } = req.body;
   let { reviewMessage } = req.body;
 
-  if (!['APPROVED', 'DENIED', 'PENDING', 'CANCELLED', 'RESOLVED'].includes(status)) {
+  if (!['APPROVED', 'DENIED', 'PENDING', 'CANCELLED', 'RESOLVED', 'ESCALATED'].includes(status)) {
     return res.status(400).json({ message: 'Invalid status given' });
   }
 
