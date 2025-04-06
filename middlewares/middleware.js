@@ -59,12 +59,12 @@ const authMiddleware = async (req, res, next) => {
   const myServer = await Server.findById(requestId);
 
   if (!myServer) {
-    logRouteUsage(req.path, req.method, 'Server Not Found', 0xff0000);
+    logRouteUsage(req.path, req.method, 'Server Not Found', 0xff0000, req);
     return res.status(404).json({ message: 'Server not found' });
   }
 
   if (myServer.serverClosed === 'yesclosed') {
-    logRouteUsage(req.path, req.method, 'Server Closed', 0xff0000);
+    logRouteUsage(req.path, req.method, 'Server Closed', 0xff0000, req);
     return res.status(502).json({ message: 'The API and Services are currently unavailable.' });
   }
 
