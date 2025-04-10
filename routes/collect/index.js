@@ -21,7 +21,7 @@ router.patch("/players", async (req, res) => {
   }
 
   try {
-    const pResponse = axios.get(`https://ngmc.co/v1/players/${name}`);
+    const pResponse = await axios.get(`https://ngmc.co/v1/players/${name}`);
 
     if (pResponse.status !== 200) {
       return res.status(404).json({ error: 'Player not found' });
