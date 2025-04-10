@@ -1,6 +1,7 @@
 const express = require('express');
 const Count = require('../../models/Count');
 const router = express.Router();
+const Player = require('../../models/Player');
 
 const allowedPageTypes = ['request', 'pay', 'social'];
 
