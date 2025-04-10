@@ -4,6 +4,30 @@ const router = express.Router();
 
 const allowedPageTypes = ['request', 'pay', 'social'];
 
+router.patch("/players/:name", async (req, res) => {
+  const { name } = req.params;
+  const { xuid, avatar } = req.body;
+
+  if (!name || !xuid || !avatar) {
+    return res.status(400).json({ error: "Missing name, xuid, or avatar" });
+  }
+
+  try {
+    const player = await Player.findOneAndUpdate(
+      { name },
+      {
+        $set: { xuid, avatar },
+        $inc: { searchCount: 1 },
+      },
+      { new: true, upsert: true }
+    );
+
+    res.json({ message: "Player log updated", player });
+  } catch (error) {
+    res.status(500).json({ error: "Server error", details: error.message });
+  }
+});
+
 router.get('/:pageType', async (req, res, next) => {
   const { pageType } = req.params;
 
