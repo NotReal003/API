@@ -15,7 +15,7 @@ app.use(
   cors({
     credentials: true,
     origin: "https://notreal003.xyz",
-    Access-Control-Allow-Origin: 'https://notreal003.xyz',
+//    Access-Control-Allow-Origin: 'https://notreal003.xyz',
   }),
 );
 app.use(cookieParser(process.env.SESSION_SECRET));
