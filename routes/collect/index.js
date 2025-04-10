@@ -21,25 +21,30 @@ router.patch("/players", async (req, res) => {
   }
 
   try {
-    const pResponse = await axios.get(`https://ngmc.co/v1/players/${name}`);
+  const { data } = await axios.get(`https://ngmc.co/v1/players/${name}`);
 
-    if (pResponse.status !== 200) {
-      return res.status(404).json({ error: 'Player not found' });
-    }
-    
-    const player = await Player.findOneAndUpdate(
-      { name },
-      {
-        $set: { xuid, avatar },
-        $inc: { searchCount: 1 },
-      },
-      { new: true, upsert: true }
-    );
-
-    res.json({ message: "Player log updated", player });
-  } catch (error) {
-    res.status(500).json({ error: "Server error", details: error.message });
+  if (!data || !data.name) {
+    return res.status(404).json({ error: "Player not found in response" });
   }
+
+  const player = await Player.findOneAndUpdate(
+    { name },
+    {
+      $set: { xuid, avatar },
+      $inc: { searchCount: 1 },
+    },
+    { new: true, upsert: true }
+  );
+
+  res.json({ message: "Player log updated", player });
+} catch (error) {
+  if (error.response && error.response.status === 404) {
+    return res.status(404).json({ error: "Player not found" });
+  }
+
+  res.status(500).json({ error: "Server error", details: error.message });
+}
+
 });
 
 router.get("/players", async (req, res) => {
