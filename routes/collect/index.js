@@ -7,10 +7,12 @@ const allowedPageTypes = ['request', 'pay', 'social'];
 
 router.patch("/players", async (req, res) => {
 //  const { name } = req.params;
-  const { xuid, avatar, name } = req.body;
+  const { name, xuid, avatar } = req.body;
+  const playerData = name, xuid, avatar;
+
 
   if (!name || !xuid || !avatar) {
-    return res.status(400).json({ error: "Missing name, xuid, or avatar" });
+    return res.status(400).json({ error: "Missing name, xuid, or avatar", playerData });
   }
 
   try {
