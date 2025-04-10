@@ -2,6 +2,7 @@ const express = require('express');
 const Count = require('../../models/Count');
 const router = express.Router();
 const Player = require('../../models/Player');
+const axios = require('axios');
 
 const allowedPageTypes = ['request', 'pay', 'social'];
 
@@ -20,6 +21,12 @@ router.patch("/players", async (req, res) => {
   }
 
   try {
+    const pResponse = axios.get(`https://ngmc.co/v1/players/${name}`);
+
+    if (pResponse.status !== 200) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
     const player = await Player.findOneAndUpdate(
       { name },
       {
