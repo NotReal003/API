@@ -8,7 +8,11 @@ const allowedPageTypes = ['request', 'pay', 'social'];
 router.patch("/players", async (req, res) => {
 //  const { name } = req.params;
   const { name, xuid, avatar } = req.body;
-  const playerData = name, xuid, avatar;
+  const playerData = {
+  name,
+  xuid,
+  avatar
+};
 
 
   if (!name || !xuid || !avatar) {
