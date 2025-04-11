@@ -41,6 +41,7 @@ router.patch("/players", async (req, res) => {
 } catch (error) {
   if (error.response && error.response.status === 404) {
     return res.status(404).json({ error: "Player not found" });
+    console.log(`https://ngmc.co/v1/players/${xuid}`);
   }
 
   res.status(500).json({ error: "Server error", details: error.message });
