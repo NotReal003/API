@@ -23,8 +23,9 @@ router.patch("/players", async (req, res) => {
   try {
   const { data } = await axios.get(`https://ngmc.co/v1/players/${xuid}`);
 
-  if (!data || !data.name) {
+  if (!data.xuid) {
     return res.status(404).json({ error: "Player not found in response" });
+    console.log(data);
   }
 
   const player = await Player.findOneAndUpdate(
