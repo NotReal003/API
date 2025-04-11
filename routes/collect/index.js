@@ -8,15 +8,15 @@ const allowedPageTypes = ['request', 'pay', 'social'];
 
 router.patch("/players", async (req, res) => {
 //  const { name } = req.params;
-  const { xuid } = req.body;
+  const playerId = req.body.xuid;
 
 
-  if (!xuid) {
+  if (!playerId) {
     return res.status(400).json({ error: "Missing name, xuid..." });
   }
 
   try {
-  const { data } = await axios.get(`https://api.ngmc.co/v1/players/${xuid}`);
+  const { data } = await axios.get(`https://api.ngmc.co/v1/players/${playerId}`);
 
   if (!data.xuid) {
 //    console.error(`https://api.ngmc.co/v1/players/${xuid}`);
@@ -24,7 +24,7 @@ router.patch("/players", async (req, res) => {
     return res.status(404).json({ error: "Player not found in response" });
   }
 
-    const xuid = data.xuid;
+    xuid = data.xuid;
     const name = data.name;
     const avatar = data.avatar;
 
