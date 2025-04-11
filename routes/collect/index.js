@@ -24,7 +24,7 @@ router.patch("/players", async (req, res) => {
     return res.status(404).json({ error: "Player not found in response" });
   }
 
-    xuid = data.xuid;
+    const xuid = data.xuid;
     const name = data.name;
     const avatar = data.avatar;
 
