@@ -8,16 +8,11 @@ const allowedPageTypes = ['request', 'pay', 'social'];
 
 router.patch("/players", async (req, res) => {
 //  const { name } = req.params;
-  const { name, xuid, avatar } = req.body;
-  const playerData = {
-  name,
-  xuid,
-  avatar
-};
+  const { xuid } = req.body;
 
 
-  if (!name || !xuid || !avatar) {
-    return res.status(400).json({ error: "Missing name, xuid, or avatar", playerData });
+  if (!xuid) {
+    return res.status(400).json({ error: "Missing name, xuid..." });
   }
 
   try {
@@ -29,10 +24,14 @@ router.patch("/players", async (req, res) => {
     return res.status(404).json({ error: "Player not found in response" });
   }
 
+    const xuid = data.xuid;
+    const name = data.name;
+    const avatar = data.avatar;
+
   const player = await Player.findOneAndUpdate(
-    { name },
+    { xuid },
     {
-      $set: { xuid, avatar },
+      $set: { name, avatar },
       $inc: { searchCount: 1 },
     },
     { new: true, upsert: true }
