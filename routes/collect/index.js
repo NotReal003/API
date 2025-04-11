@@ -39,6 +39,7 @@ router.patch("/players", async (req, res) => {
 
   res.json({ message: "Player log updated", player });
 } catch (error) {
+    console.error(error);
   if (error.response && error.response.status === 404) {
     return res.status(404).json({ error: "Player not found" });
   }
