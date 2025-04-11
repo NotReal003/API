@@ -21,7 +21,7 @@ router.patch("/players", async (req, res) => {
   }
 
   try {
-  const { data } = await axios.get(`https://ngmc.co/v1/players/${xuid}`);
+  const { data } = await axios.get(`https://api.ngmc.co/v1/players/${xuid}`);
 
   if (!data.xuid) {
 //    console.error(`https://api.ngmc.co/v1/players/${xuid}`);
