@@ -14,7 +14,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "https://notreal003.xyz",
+    origin: "notreal003.xyz",
 //    Access-Control-Allow-Origin: 'https://notreal003.xyz',
   }),
 );
