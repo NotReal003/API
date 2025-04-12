@@ -14,10 +14,10 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "notreal003.xyz",
-//    Access-Control-Allow-Origin: 'https://notreal003.xyz',
-  }),
+    origin: /https:\/\/(.*\.)?notreal003\.xyz$/,
+  })
 );
+
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
