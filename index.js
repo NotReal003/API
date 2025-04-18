@@ -13,8 +13,10 @@ const app = express();
 
 app.use(
   cors({
+    origin: (origin, callback) => {
+      callback(null, true); // Allow all origins
+    },
     credentials: true,
-    origin: /https:\/\/(.*\.)?notreal003\.xyz$/,
   })
 );
 
