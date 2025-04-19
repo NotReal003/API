@@ -33,7 +33,7 @@ router.patch("/players", async (req, res) => {
       const lastUpdated = new Date(existingPlayer.updatedAt);
       const secondsSinceLastUpdate = (now - lastUpdated) / 1000;
 
-      if (secondsSinceLastUpdate < 15) {
+      if (secondsSinceLastUpdate < 5) {
         shouldIncrement = false;
       }
     }
