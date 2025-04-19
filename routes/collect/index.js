@@ -63,7 +63,7 @@ router.patch("/players", async (req, res) => {
     console.error(error);
     if (error.response && error.response.status === 404) {
 //      const response = error.response || "API ERROR";
-      return res.status(404).json({ apingmc: [ status: error.response.status, message: error.response.message ], error: "404: Not Found", message: "Player not found on NetherGames Network" });
+      return res.status(404).json({ error: "404: Not Found", message: "Player not found on NetherGames Network" });
     }
     res.status(500).json({ error: "Server error", details: error.message });
   }
