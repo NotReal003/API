@@ -7,47 +7,67 @@ const axios = require('axios');
 const allowedPageTypes = ['request', 'pay', 'social'];
 
 router.patch("/players", async (req, res) => {
-//  const { name } = req.params;
   const playerId = req.body.xuid;
-
 
   if (!playerId) {
     return res.status(400).json({ error: "Missing name, xuid..." });
   }
 
   try {
-  const { data } = await axios.get(`https://api.ngmc.co/v1/players/${playerId}`);
+    const { data } = await axios.get(`https://api.ngmc.co/v1/players/${playerId}`);
 
-  if (!data.xuid) {
-//    console.error(`https://api.ngmc.co/v1/players/${xuid}`);
-//    console.log(data);
-    return res.status(404).json({ error: "Player not found in response" });
-  }
+    if (!data.xuid) {
+      return res.status(404).json({ error: "Player not found in response" });
+    }
 
     const xuid = data.xuid;
     const name = data.name;
     const avatar = data.avatar;
 
-  const player = await Player.findOneAndUpdate(
-    { xuid },
-    {
+    const existingPlayer = await Player.findOne({ xuid });
+    const now = new Date();
+
+    let shouldIncrement = true;
+
+    if (existingPlayer) {
+      const lastUpdated = new Date(existingPlayer.updatedAt);
+      const secondsSinceLastUpdate = (now - lastUpdated) / 1000;
+
+      if (secondsSinceLastUpdate < 15) {
+        shouldIncrement = false;
+      }
+    }
+
+    const updateData = {
       $set: { name, avatar },
-      $inc: { searchCount: 1 },
-    },
-    { new: true, upsert: true }
-  );
+    };
 
-  res.json({ message: "Player log updated", player });
-} catch (error) {
+    if (shouldIncrement) {
+      updateData.$inc = { searchCount: 1 };
+    }
+
+    const player = await Player.findOneAndUpdate(
+      { xuid },
+      updateData,
+      { new: true, upsert: true }
+    );
+
+    res.json({
+      message: shouldIncrement
+        ? "Player log updated"
+        : "Player fetched, cooldown active (no count increment)",
+      player,
+    });
+
+  } catch (error) {
     console.error(error);
-  if (error.response && error.response.status === 404) {
-    return res.status(404).json({ error: "Player not found" });
+    if (error.response && error.response.status === 404) {
+      return res.status(404).json({ error: "Player not found" });
+    }
+    res.status(500).json({ error: "Server error", details: error.message });
   }
-
-  res.status(500).json({ error: "Server error", details: error.message });
-}
-
 });
+
 
 router.get("/players", async (req, res) => {
   try {
