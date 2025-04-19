@@ -10,7 +10,7 @@ router.patch("/players", async (req, res) => {
   const playerId = req.body.xuid;
 
   if (!playerId) {
-    return res.status(400).json({ error: "Missing name, xuid..." });
+    return res.status(400).json({ error: "Missing xuid", message: "Player xuid is required" });
   }
 
   try {
