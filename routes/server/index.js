@@ -16,6 +16,10 @@ router.get("/producthunt", (req, res) => {
   res.redirect('https://www.producthunt.com/products/request-managemen-portal');
 });
 
+router.get("/video", (req, res) => {
+  res.redirect('https://youtu.be/Rm79yXU3p80?si=KeoRH2Ayv1-H__y8');
+});
+
 const adminLimiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
   max: 5, // Only 5 requests per 10 minutes
