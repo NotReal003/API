@@ -9,7 +9,7 @@ router.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
-app.get('/images/logo', (req, res) => {
+router.get('/images/logo', (req, res) => {
   res.sendFile(path.join(__dirname, 'routes', 'admins', 'send.html'));
 });
 
