@@ -9,8 +9,13 @@ router.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
-router.get('/images/logo', (req, res) => {
+router.get('/temp/email', (req, res) => {
   res.sendFile(path.join(__dirname, 'routes', 'admins', 'send.html'));
+});
+
+app.get('/images/logo', (req, res) => {
+  const imagePath = path.join(__dirname, 'routes', 'admins', 'IMG_3275.jpeg');
+  res.sendFile(imagePath);
 });
 
 router.get("/source", (req, res) => {
