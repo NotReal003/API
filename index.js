@@ -29,6 +29,7 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static(__dirname));
 
 const PORT = process.env.PORT || 3001;
 
