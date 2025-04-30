@@ -3,9 +3,14 @@ const router = express.Router();
 const User = require('../../models/User');
 const Count = require('../../models/Count');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 
 router.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
+});
+
+app.get('/images/logo', (req, res) => {
+  res.sendFile(path.join(__dirname, 'routes', 'admins', 'send.html'));
 });
 
 router.get("/source", (req, res) => {
