@@ -29,7 +29,7 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(__dirname));
+app.use('/admins', express.static(path.join(__dirname, 'routes', 'admins')));;
 
 const PORT = process.env.PORT || 3001;
 
