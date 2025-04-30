@@ -8,6 +8,7 @@ const cors = require("cors");
 require("dotenv").config();
 require('./config/passport');
 const passport = require('passport');
+const path = require('path');
 
 const app = express();
 
