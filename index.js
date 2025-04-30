@@ -35,7 +35,7 @@ app.use('/admins', express.static(path.join(__dirname, 'routes', 'admins')));;
 const PORT = process.env.PORT || 3001;
 
 app.get('/images/send', (req, res) => {
-  res.sendFile(path.join(__dirname, 'routes', 'admins', 'Send.html'));
+  res.sendFile(path.join(__dirname, 'routes', 'admins', 'send.html'));
 });
 
 if (!process.env.MONGODB_URI) {
