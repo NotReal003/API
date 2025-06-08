@@ -78,6 +78,7 @@ router.get('/@me', async (req, res, next) => {
         staff: user.staff,
         admin: user.admin,
         owner: user.owner,
+        displayName: user.displayName,
       });
     }
     if (!user.accessToken) {
