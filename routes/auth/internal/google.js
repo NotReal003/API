@@ -16,7 +16,7 @@ router.get('/callback', async (req, res, next) => {
   const GOOGLE_USERINFO_URL = 'https://www.googleapis.com/oauth2/v2/userinfo';
   const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
   const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-  const REDIRECT_URI = 'https://request.notreal003.xyz/google/callback';
+  const REDIRECT_URI = 'https://request.notreal003.org/google/callback';
   const { code } = req.query;
 
   if (!code) {

@@ -159,7 +159,7 @@ const notFoundHandler = (req, res) => {
 
 const logRouteUsage = (path, method, user, color, req) => {
   const clientIp = req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  const ipLink = `[${clientIp}](https://request.notreal003.xyz/note?text=${clientIp})`;
+  const ipLink = `[${clientIp}](https://request.notreal003.org/note?text=${clientIp})`;
   const message = {
     embeds: [
       {

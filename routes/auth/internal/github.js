@@ -6,7 +6,7 @@ router.get('/github/callback', async (req, res) => {
   const GITHUB_ENDPOINT = 'https://github.com/login/oauth/access_token';
   const CLIENT_ID = process.env.G_ID;
   const CLIENT_SECRET = process.env.G_SECRET;
-  const REDIRECT_URI = 'https://request.notreal003.xyz/github/callback';
+  const REDIRECT_URI = 'https://request.notreal003.org/github/callback';
 
   res.status(406).json({ message: 'Due to security reasons, we are unable to accept Github OAuth, please SignIn with Discord or Email instead.' });
 
