@@ -1,5 +1,4 @@
 const express = require('express');
-const performanceRoutes = require("./performance");
 const router = express.Router();
 
 router.use('/auth', require('./auth'));
