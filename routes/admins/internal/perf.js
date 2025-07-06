@@ -23,7 +23,15 @@ router.post("/", async (req, res) => {
 
 // GET performance metrics
 router.get("/", async (req, res) => {
+  const user = await req.user;
+
+  if (!user) {
+    return res.status(401).json({ code: 0, message: 'Unauthorized' });
+  }
   try {
+    if (user.admin !== false) {
+      return res.status(403).json({ message: "Missig permission..." });
+    }
     const metrics = await PerfMetric.find().sort({ timestamp: -1 }).limit(100);
     res.json(metrics);
   } catch (err) {
