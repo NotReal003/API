@@ -1,3 +1,4 @@
+// routes/performance/index.js
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
@@ -7,13 +8,19 @@ const PerfMetric = mongoose.model("PerfMetric", new mongoose.Schema({
   value: Number,
   delta: Number,
   id: String,
+  userAgent: String,
+  connection: String,
   timestamp: { type: Date, default: Date.now },
 }));
 
 // POST performance metric
 router.post("/", async (req, res) => {
   try {
-    const metric = new PerfMetric(req.body);
+    const metric = new PerfMetric({
+      ...req.body,
+      userAgent: req.headers['user-agent'] || 'Unknown',
+      connection: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+    });
     await metric.save();
     res.status(200).json({ success: true });
   } catch (err) {
@@ -21,7 +28,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET performance metrics
+// GET performance metrics (admin only)
 router.get("/", async (req, res) => {
   const user = await req.user;
 
@@ -30,7 +37,7 @@ router.get("/", async (req, res) => {
   }
   try {
     if (user.admin !== true) {
-      return res.status(403).json({ message: "Missig permission..." });
+      return res.status(403).json({ message: "Missing permission..." });
     }
     const metrics = await PerfMetric.find().sort({ timestamp: -1 }).limit(100);
     res.json(metrics);
