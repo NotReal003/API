@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
     return res.status(401).json({ code: 0, message: 'Unauthorized' });
   }
   try {
-    if (user.admin !== false) {
+    if (user.admin !== true) {
       return res.status(403).json({ message: "Missig permission..." });
     }
     const metrics = await PerfMetric.find().sort({ timestamp: -1 }).limit(100);
