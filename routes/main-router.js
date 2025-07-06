@@ -1,5 +1,5 @@
 const express = require('express');
-
+const performanceRoutes = require("./performance");
 const router = express.Router();
 
 router.use('/auth', require('./auth'));
@@ -20,6 +20,6 @@ router.use('/', require('./server'));
 router.use('/ip', require('./Ip'));
 router.use('/test', require('./test'));
 router.use('/auth/google', require('./auth/internal/google'));
-router.use('/performance', require('./performance/index.js'))
+router.use('/performance', performanceRoutes);
 
 module.exports = router;
